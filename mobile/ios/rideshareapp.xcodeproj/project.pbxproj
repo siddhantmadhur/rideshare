@@ -14,8 +14,8 @@
 		96905EF65AED1B983A6B3ABC /* libPods-rideshareapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-rideshareapp.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		7DB37B4F9E664C248ACED1D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5AC163C80E01456695EB5454 /* GoogleService-Info.plist */; };
-		313CBFC9CD384C469A7C47B2 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC681D59616437893B5932D /* noop-file.swift */; };
+		72925384274F4D65A23E2E96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2F30C6566F7842CEAE55F999 /* GoogleService-Info.plist */; };
+		15ABDA8A48FD43D4B267EBFC /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21184E79EF14048A50BF41F /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,9 +32,9 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-rideshareapp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		5AC163C80E01456695EB5454 /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "rideshareapp/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
-		FFC681D59616437893B5932D /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "rideshareapp/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
-		C979FBC6FBD94598914F4E3E /* rideshareapp-Bridging-Header.h */ = {isa = PBXFileReference; name = "rideshareapp-Bridging-Header.h"; path = "rideshareapp/rideshareapp-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		2F30C6566F7842CEAE55F999 /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "rideshareapp/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
+		A21184E79EF14048A50BF41F /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "rideshareapp/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		B72CCB22F052475B81923C1E /* rideshareapp-Bridging-Header.h */ = {isa = PBXFileReference; name = "rideshareapp-Bridging-Header.h"; path = "rideshareapp/rideshareapp-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,9 +59,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				5AC163C80E01456695EB5454 /* GoogleService-Info.plist */,
-				FFC681D59616437893B5932D /* noop-file.swift */,
-				C979FBC6FBD94598914F4E3E /* rideshareapp-Bridging-Header.h */,
+				2F30C6566F7842CEAE55F999 /* GoogleService-Info.plist */,
+				A21184E79EF14048A50BF41F /* noop-file.swift */,
+				B72CCB22F052475B81923C1E /* rideshareapp-Bridging-Header.h */,
 			);
 			name = rideshareapp;
 			sourceTree = "<group>";
@@ -201,8 +201,8 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				7DB37B4F9E664C248ACED1D7 /* GoogleService-Info.plist in Resources */,
-				38EB378C2FCB459CB53F39B5 /* rideshareapp-Bridging-Header.h in Resources */,
+				72925384274F4D65A23E2E96 /* GoogleService-Info.plist in Resources */,
+				B81D9FD4165045639C61EA3B /* rideshareapp-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,7 +278,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				313CBFC9CD384C469A7C47B2 /* noop-file.swift in Sources */,
+				15ABDA8A48FD43D4B267EBFC /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

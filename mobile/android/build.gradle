@@ -9,6 +9,7 @@ buildscript {
         kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.25'
 
         ndkVersion = "26.1.10909125"
+        googlePlayServicesAuthVersion = "20.7.0" // <--- use this version or newer
     }
     repositories {
         google()
@@ -23,6 +24,7 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+apply plugin: 'com.google.gms.google-services'
 
 allprojects {
     repositories {

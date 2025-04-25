@@ -1,8 +1,17 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import { startSignInFlow} from "../lib/auth"
+import { signInWithGoogle} from "../lib/auth"
+import { useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { fbApp, fbAuth } from "@/lib/firebase";
 
 
 export default function Index() {
+
+    useEffect(()=>{
+        fbAuth.onAuthStateChanged((user)=>{
+            console.log("User:", user)
+        })
+    }, [])
   return (
     <View
       style={{
@@ -23,9 +32,14 @@ export default function Index() {
       Welcome to RideShare
       </Text>
       <Button
-        onPress={() => {
+        onPress={async () => {
           console.log("hi");
-          startSignInFlow();
+          try {
+          const res = await signInWithGoogle();
+          } catch (e) {
+              console.log("there was an err", e)
+          }
+          console.log("bye")
         }}
         title="Sign in with Google"
       ></Button>
