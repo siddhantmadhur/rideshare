@@ -10,10 +10,10 @@ const firebaseConfig = {
   projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_APP_ID, 
+  appId: process.env.EXPO_PUBLIC_APP_ID,
 };
 
 // Initialize Firebase
 const fbApp = initializeApp(firebaseConfig);
 
-export {fbApp}
+export { fbApp };

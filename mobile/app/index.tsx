@@ -1,15 +1,40 @@
-import { Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
+import {signInWithGoogle} from "../lib/auth"
+
 
 export default function Index() {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
+        gap: 5,
+        alignSelf: 'stretch',
+        paddingBlock: 30,
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text 
+        style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+        }}
+      >
+      Welcome to RideShare
+      </Text>
+      <Button
+        onPress={() => {
+          console.log("hi");
+          signInWithGoogle();
+        }}
+        title="Sign in with Google"
+      ></Button>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+    button: {
+
+    }
+})
