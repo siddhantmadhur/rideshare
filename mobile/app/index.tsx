@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import {signInWithGoogle} from "../lib/auth"
+import { startSignInFlow} from "../lib/auth"
 
 
 export default function Index() {
@@ -25,7 +25,7 @@ export default function Index() {
       <Button
         onPress={() => {
           console.log("hi");
-          signInWithGoogle();
+          startSignInFlow();
         }}
         title="Sign in with Google"
       ></Button>
