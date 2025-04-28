@@ -1,17 +1,17 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import { signInWithGoogle} from "../lib/auth"
 import { useEffect } from "react";
-import { getAuth } from "firebase/auth";
-import { fbApp, fbAuth } from "@/lib/firebase";
-
+import auth from "@react-native-firebase/auth"
 
 export default function Index() {
 
     useEffect(()=>{
-        fbAuth.onAuthStateChanged((user)=>{
-            console.log("User:", user)
+        const subscriber = auth().onAuthStateChanged((user)=>{
+            console.log("Detected change: ", user) 
         })
-    }, [])
+        return subscriber;
+    },[])
+
   return (
     <View
       style={{
