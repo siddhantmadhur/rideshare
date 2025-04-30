@@ -6,6 +6,8 @@ Rideshare
 ```
 docker compose up
 ```
+![Uploading image.png…]()
+
 
 ### Mobile App
 
