@@ -2,11 +2,13 @@ Rideshare
 
 ## How to setup
 
+![image](https://github.com/user-attachments/assets/eb5bccb7-3da7-486c-aacb-df463ed4b3e0)
+
+
 ### Database
 ```
 docker compose up
 ```
-![Uploading image.png…]()
 
 
 ### Mobile App
