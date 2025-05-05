@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func AuthenticateRoute(next func(echo.Context, *auth.User, *firebase.App) error, app *firebase.App) echo.HandlerFunc {
+func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) error, app *firebase.App) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 

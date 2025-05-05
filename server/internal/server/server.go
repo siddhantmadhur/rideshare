@@ -13,4 +13,6 @@ func Routes(e *echo.Echo, app *firebase.App) {
 		})
 	})
 
+	e.POST("/rides/create", ProtectRouteWithAuth(createRidesRoute, app))
+
 }
