@@ -2,6 +2,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import { signInWithGoogle} from "../lib/auth"
 import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
+import { router } from 'expo-router';
 
 export default function Index() {
 
@@ -12,6 +13,7 @@ export default function Index() {
         const subscriber = auth().onAuthStateChanged((user)=>{
             if (user) {
                 setUser(user)
+                router.push('/offer')
             }
             if (initializing) setInitializing(false)
         })
@@ -23,6 +25,7 @@ export default function Index() {
         return null;
     }
     if (user) {
+                
         return (
     <View
       style={{
