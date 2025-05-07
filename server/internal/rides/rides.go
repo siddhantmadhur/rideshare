@@ -14,7 +14,7 @@ type RideOffer struct {
 	Timestamp time.Time `json:"timestamp" gorm:"not null"`
 	Notes     string    `json:"notes"`
 	User      auth.User `json:"-"`
-	UserID    string    `json:"user_id" gorm:"unique;not null"`
+	UserID    string    `json:"user_id" gorm:"not null"` // took out unique so a uid can have more than 1 ride
 	Pickup    string    `json:"pickup" gorm:"not null"`
 }
 
