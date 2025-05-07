@@ -1,10 +1,41 @@
 // --- app/offer/review.tsx ---
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
 
 export default function ReviewOffer() {
-  const { ride } = useOffer();
+  const { ride, resetRide } = useOffer();
+
+  const submitRide = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/rides/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${token}`, // Firebase Auth
+        },
+        body: JSON.stringify({
+          pickup: ride.pickup,
+          dropoff: ride.dropoff,
+          notes: ride.notes || '',
+          timestamp: new Date(`${ride.date}T${ride.time}:00`).toISOString(),
+          user_id: 'test-user-id', // Replace with actual UID from Firebase Auth
+        }),
+      });
+
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(msg || 'Submission failed');
+      }
+
+      Alert.alert('Ride offer created!');
+      resetRide(); // clear form
+      router.replace('/offer/thank-you');
+    } catch (err: any) {
+      console.error(err);
+      Alert.alert('Error', err.message || 'Failed to submit ride');
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -22,7 +53,7 @@ export default function ReviewOffer() {
         <Text>Notes: {ride.notes}</Text>
       </View>
 
-      <Button title="Submit" onPress={() => router.push('/offer/thank-you')} />
+      <Button title="Submit" onPress={submitRide} />
     </ScrollView>
   );
 }

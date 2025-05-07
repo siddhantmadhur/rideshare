@@ -1,28 +1,51 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
+import { useState, useEffect } from 'react';
+
+type Ride = {
+  id: number;
+  pickup: string;
+  dropoff: string;
+  passengers?: string;
+  date?: string;
+  time?: string;
+};
 
 export default function OfferList() {
-  const { submittedRides } = useOffer();
+  const [rides, setRides] = useState<Ride[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/rides') // use IP adress instead of localhost since we are running backend
+      .then((res) => res.json())
+      .then((data) => setRides(data))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Ride Offers</Text>
 
-      <FlatList
-        data={submittedRides}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text>Seats Available: {item.passengers}</Text>  {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
-            <Text>Pickup: {item.pickup}</Text>
-            <Text>Dropoff: {item.dropoff}</Text>
-            <Text>Date: {item.date}</Text>
-            <Text>Time: {item.time}</Text>
-          </View>
-        )}
-        ListEmptyComponent={<Text>No offers yet.</Text>}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          data={rides}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text>Pickup: {item.pickup}</Text>
+              <Text>Dropoff: {item.dropoff}</Text>
+              <Text>Seats Available: {item.passengers || 'N/A'}</Text>  {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
+              <Text>Date: {item.date}</Text>
+              <Text>Time: {item.time}</Text>
+            </View>
+          )}
+          ListEmptyComponent={<Text>No offers yet.</Text>}
+        />
+      )}
 
       <TouchableOpacity style={styles.addButton} onPress={() => router.push('/offer/form')}>
         <Text style={styles.addText}>+ New Offer</Text>

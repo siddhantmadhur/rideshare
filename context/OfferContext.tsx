@@ -16,29 +16,21 @@ type OfferContextType = {
   ride: RideDetails;
   setRide: (data: Partial<RideDetails>) => void;
   resetRide: () => void;
-  submitRide: () => void;
-  submittedRides: RideDetails[];
 };
 
 const OfferContext = createContext<OfferContextType | null>(null);
 
 export const OfferProvider = ({ children }: { children: React.ReactNode }) => {
   const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'}); //default yes split gas
-  const [submittedRides, setSubmittedRides] = useState<RideDetails[]>([]);
 
   const setRide = (data: Partial<RideDetails>) =>
     setRideState((prev) => ({ ...prev, ...data }));
 
   const resetRide = () => setRideState({});
 
-  const submitRide = () => {
-    setSubmittedRides((prev) => [...prev, ride]);
-    resetRide();
-  };
-
   return (
     <OfferContext.Provider
-      value={{ ride, setRide, resetRide, submitRide, submittedRides }}
+      value={{ ride, setRide, resetRide }}
     >
       {children}
     </OfferContext.Provider>

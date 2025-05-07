@@ -98,7 +98,7 @@ export default function OfferForm() {
           onChange={(event, selectedDate) => {
             setShowDate(false);
             if (selectedDate) {
-              const dateStr = selectedDate.toLocaleDateString();
+              const dateStr = selectedDate.toISOString().split('T')[0]; // "YYYY-MM-DD"
               setRide({ date: dateStr });
             }
           }}
@@ -114,10 +114,7 @@ export default function OfferForm() {
           onChange={(event, selectedDate) => {
             setShowTime(false);
             if (selectedDate) {
-              const timeStr = selectedDate.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              });
+              const timeStr = selectedDate.toTimeString().slice(0, 5); // "HH:mm"
               setRide({ time: timeStr });
             }
           }}

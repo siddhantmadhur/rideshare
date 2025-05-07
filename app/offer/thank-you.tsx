@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 
 export default function ThankYou() {
   const router = useRouter();
-  const { submitRide } = useOffer();
 
   return (
     <View style={styles.container}>
@@ -16,7 +15,6 @@ export default function ThankYou() {
       <Button
         title="Return to Home"
         onPress={() => {
-          submitRide();
           router.push('/offer');
         }}
       />
