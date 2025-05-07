@@ -9,7 +9,22 @@ export default function OfferForm() {
   const { setRide, ride } = useOffer();
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const isGasSplit = ride.splitGas !== 'No';
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: boolean } = {
+      passengers: !ride.passengers || isNaN(Number(ride.passengers)),
+      pickup: !ride.pickup,
+      dropoff: !ride.dropoff,
+      carModel: !ride.carModel,
+      date: !ride.date,
+      time: !ride.time,
+      environment: !ride.environment,
+    };
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(Boolean);
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -17,9 +32,13 @@ export default function OfferForm() {
 
       <TextInput
         placeholder="Number of Passengers"
-        style={styles.input}
+        keyboardType="numeric"
+        style={[styles.input,errors.passengers && styles.error]}
         value={ride.passengers}
-        onChangeText={(text) => setRide({ passengers: text })}
+        onChangeText={(text) => {
+          setRide({ passengers: text })
+          setErrors((e) => ({ ...e, passengers: false }));
+        }}
       />
 
       <View style={styles.switchRow}>
@@ -32,30 +51,41 @@ export default function OfferForm() {
 
       <TextInput
         placeholder="Pickup Location"
-        style={styles.input}
+        style={[styles.input, errors.pickup && styles.error]}
         value={ride.pickup}
-        onChangeText={(text) => setRide({ pickup: text })}
+        onChangeText={(text) => {
+          setRide({ pickup: text })
+          setErrors((e) => ({ ...e, pickup: false }));
+        }}
       />
 
       <TextInput
         placeholder="Dropoff Location"
-        style={styles.input}
+        style={[styles.input, errors.dropoff && styles.error]}
         value={ride.dropoff}
-        onChangeText={(text) => setRide({ dropoff: text })}
+        onChangeText={(text) => {
+          setRide({ dropoff: text })
+          setErrors((e) => ({ ...e, dropoff: false }));
+        }}
       />
 
       <TextInput
         placeholder="Car Model"
-        style={styles.input}
+        style={[styles.input, errors.carModel && styles.error]}
         value={ride.carModel}
-        onChangeText={(text) => setRide({ carModel: text })}
+        onChangeText={(text) => {
+          setRide({ carModel: text })
+          setErrors((e) => ({ ...e, carModel: false }));
+        }}
       />
 
-      <Pressable onPress={() => setShowDate(true)} style={styles.input}>
+      <Pressable onPress={() => setShowDate(true)} 
+      style={[styles.input, errors.date && styles.error]}>
         <Text>{ride.date || 'Select Date'}</Text>
       </Pressable>
 
-      <Pressable onPress={() => setShowTime(true)} style={styles.input}>
+      <Pressable onPress={() => setShowTime(true)} 
+      style={[styles.input,, errors.time && styles.error]}>
         <Text>{ride.time || 'Select Time'}</Text>
       </Pressable>
 
@@ -96,9 +126,12 @@ export default function OfferForm() {
 
       <TextInput
         placeholder="Car Environment"
-        style={styles.input}
+        style={[styles.input, errors.environment && styles.error]}
         value={ride.environment}
-        onChangeText={(text) => setRide({ environment: text })}
+        onChangeText={(text) => {
+          setRide({ environment: text })
+          setErrors((e) => ({ ...e, environment: false }));
+        }}
       />
 
       <TextInput
@@ -109,7 +142,17 @@ export default function OfferForm() {
         onChangeText={(text) => setRide({ notes: text })}
       />
 
-      <Button title="Next" onPress={() => router.push('/offer/review')} />
+      <Button 
+        title="Next" 
+        onPress={() => {
+          if(validateForm()){
+            router.push('/offer/review');
+          } 
+          else {
+            alert('Please fix the highlighted fields.');
+          }
+        }}
+        />
     </ScrollView>
   );
 }
@@ -129,5 +172,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15,
+  },
+  error: {
+    borderColor: 'red',
   },
 });
