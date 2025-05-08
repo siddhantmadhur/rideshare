@@ -19,7 +19,7 @@ export default function ReviewOffer() {
           dropoff: ride.dropoff,
           notes: ride.notes || '',
           timestamp: new Date(`${ride.date}T${ride.time}:00`).toISOString(),
-          user_id: 'test-user-id', // Replace with actual UID from Firebase Auth
+          user_id: 'avIvu3TlEtRoMSDQ6Y9IKgp50wF3', // Replace with actual UID from Firebase Auth
         }),
       });
 
