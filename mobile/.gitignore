@@ -31,10 +31,9 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo
 
-# firebase admin access
-**/service-account.json
 app-example

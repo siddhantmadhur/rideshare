@@ -1,0 +1,65 @@
+{
+  "expo": {
+    "name": "rideshare-app",
+    "slug": "rideshare-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.siddhantmadhur.rideshareapp",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "android": {
+        "googleServicesFile": "./google-services.json",
+        "package": "com.siddhantmadhur.rideshareapp",
+        "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.siddhantmadhur.rideshareapp"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-google-signin/google-signin",
+      "expo-router",
+      [
+          "expo-splash-screen",
+          {
+              "image": "./assets/images/splash-icon.png",
+              "imageWidth": 200,
+              "resizeMode": "contain",
+              "backgroundColor": "#ffffff"
+          }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+              "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a9ceddbe-cea9-4e93-ae13-775ca908cfc7"
+      }
+    }
+  }
+}

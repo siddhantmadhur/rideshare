@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "679084923122",
+    "project_id": "rideshare-ucsc",
+    "storage_bucket": "rideshare-ucsc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679084923122:android:11141aa1adc0d60280586b",
+        "android_client_info": {
+          "package_name": "com.siddhantmadhur.rideshareapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679084923122-6e219jdv9p46ko2v6rtnjp5pjijkt59q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.siddhantmadhur.rideshareapp",
+            "certificate_hash": "8e500890ae47806fae59322087f7ab475d2130e9"
+          }
+        },
+        {
+          "client_id": "679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgvXlI6nDUPXB0g6DQnqK0JzPsH0MJfCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "679084923122-ao9urrt2mjta2rrhfc74i1k8dir628pa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.siddhantmadhur.rideshareapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
