@@ -48,7 +48,18 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 		}
 
 		var u auth.User
-		res := tx.First(&u, "id = ?", token.UID)
+		fbUser, err := a.GetUser(context.Background(), token.UID)
+
+		if err != nil {
+			return c.JSON(500, map[string]string{
+				"msg":   "Couldn't get the user from firebase",
+				"error": err.Error(),
+			})
+		}
+
+		u.ID = fbUser.UID
+		u.DisplayName = fbUser.DisplayName
+		res := tx.FirstOrCreate(&u, "id = ?", token.UID)
 		if res.Error != nil {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"msg": "User profile has not been created!",
