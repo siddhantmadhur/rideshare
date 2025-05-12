@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"rideshare/internal/auth"
 	"rideshare/internal/storage"
@@ -11,14 +12,26 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func getBearerToken(s string) (string, error) {
+	bearerToken := strings.Split(s, "Bearer ")
+	if len(s) == 0 || len(bearerToken) < 2 {
+		return "", errors.New("Could not get bearer token")
+	}
+
+	if len(bearerToken) == 1 {
+		return bearerToken[0], nil
+	}
+	return bearerToken[1], nil
+}
+
 func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) error, app *firebase.App) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 
 		reqToken := c.Request().Header.Get("Authorization")
-		bearerToken := strings.Split(reqToken, "Bearer ")
+		bearerToken, err := getBearerToken(reqToken)
 
-		if len(reqToken) == 0 || len(bearerToken) == 0 {
+		if err != nil {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"msg": "Bearer token not detected",
 			})
@@ -32,7 +45,7 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 			})
 		}
 
-		token, err := a.VerifyIDToken(context.Background(), bearerToken[1])
+		token, err := a.VerifyIDToken(context.Background(), bearerToken)
 		if err != nil {
 			return c.JSON(500, map[string]string{
 				"msg":   "There was a problem with Firebase",
@@ -40,6 +53,7 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 			})
 		}
 		tx, err := storage.GetConnection()
+		defer storage.CloseConnection(tx)
 		if err != nil {
 			return c.JSON(500, map[string]string{
 				"msg":   "There was a problem with connecting to the database",
@@ -47,7 +61,6 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 			})
 		}
 
-		var u auth.User
 		fbUser, err := a.GetUser(context.Background(), token.UID)
 
 		if err != nil {
@@ -57,15 +70,13 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 			})
 		}
 
-		u.ID = fbUser.UID
-		u.DisplayName = fbUser.DisplayName
-		res := tx.FirstOrCreate(&u, "id = ?", token.UID)
-		if res.Error != nil {
+		u, err := auth.GetUserProfile(fbUser.UID)
+		if err != nil {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"msg": "User profile has not been created!",
 			})
 		}
 
-		return next(c, &u, app)
+		return next(c, u, app)
 	}
 }
