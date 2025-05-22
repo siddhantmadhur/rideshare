@@ -1,15 +1,26 @@
 import React, { createContext, useContext, useState } from 'react';
 
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
 export type RideDetails = {
+  id?: string;
+  ownerId?: string;
+  startLocation?: LocationData | string;
+  startLocationAddress?: string;
+  endLocation?: LocationData | string;
+  endLocationAddress?: string;
+  time?: string;
   passengers?: string;
   splitGas?: string;
-  pickup?: string;
-  dropoff?: string;
   carModel?: string;
-  date?: string;
-  time?: string;
   environment?: string;
   notes?: string;
+  pickupRadius?: number;
+  dropOffRadius?: number;
+  combinedCost?: number;
 };
 
 type OfferContextType = {
@@ -26,13 +37,27 @@ export const OfferProvider = ({ children }: { children: React.ReactNode }) => {
   const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'}); //default yes split gas
   const [submittedRides, setSubmittedRides] = useState<RideDetails[]>([]);
 
-  const setRide = (data: Partial<RideDetails>) =>
-    setRideState((prev) => ({ ...prev, ...data }));
+  console.log('OfferContext: Current ride state:', ride); // Debug log
+  console.log('OfferContext: Current submittedRides:', submittedRides); // Debug log
 
-  const resetRide = () => setRideState({});
+  const setRide = (data: Partial<RideDetails>) => {
+    console.log('OfferContext: setRide called with:', data); // Debug log
+    setRideState((prev) => ({ ...prev, ...data }));
+  };
+
+  const resetRide = () => {
+    console.log('OfferContext: resetRide called'); // Debug log
+    setRideState({ splitGas: 'Yes'});
+  };
 
   const submitRide = () => {
-    setSubmittedRides((prev) => [...prev, ride]);
+    console.log('OfferContext: submitRide called!'); // Debug log
+    console.log('OfferContext: Current ride being submitted:', ride); // Debug log
+    setSubmittedRides((prev) => {
+      const newSubmittedRides = [...prev, ride];
+      console.log('OfferContext: New submittedRides array:', newSubmittedRides); // Debug log
+      return newSubmittedRides;
+    });
     resetRide();
   };
 

@@ -11,7 +11,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.siddhantmadhur.rideshareapp",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -19,6 +22,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+        }
       }
     },
     "web": {
