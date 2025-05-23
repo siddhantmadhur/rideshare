@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, StyleSheet, Modal, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { useOffer, LocationData as ContextLocationData } from '../../context/OfferContext';
-
-// Assuming LOCATION type is { latitude: number, longitude: number }
-interface LocationData {
-  latitude: number;
-  longitude: number;
-}
+import { useOffer, LocationData } from '../../context/OfferContext';
 
 interface RideOffer {
   id: string;
   ownerId: string;
   startLocation: LocationData;
   endLocation: LocationData;
-  time: string; // ISO string or other date format
+  time: string;
   passengers?: string;
   splitGas?: string;
   carModel?: string;
@@ -43,14 +37,12 @@ interface MapViewDisplayProps {
   } | undefined;
 }
 
-// Add new interface for ride detail modal
 interface RideDetailModalProps {
   visible: boolean;
   onClose: () => void;
   rideOffer: RideOffer | null;
 }
 
-// Mock user data - in real app this would come from user profile API
 const getMockUserData = (ownerId: string) => ({
   name: ownerId === 'temp-owner' ? 'Bob' : 'John Doe',
   profileImage: 'https://via.placeholder.com/80/4A90E2/FFFFFF?text=B',
@@ -69,10 +61,7 @@ const RideDetailModal: React.FC<RideDetailModalProps> = ({ visible, onClose, rid
 
   const userData = getMockUserData(rideOffer.ownerId);
   
-  // Format destination address - prioritize readable address
   const getDestinationAddress = () => {
-    // In a real app, you'd reverse geocode the coordinates to get the address
-    // For now, using mock address
     return '410 Porter Kresge Rd, Santa Cruz, CA';
   };
 
@@ -181,7 +170,6 @@ const MapViewDisplay = ({ rideOffers = [], rideRequests = [], initialRegion, onM
         style={styles.map}
         initialRegion={initialRegion}
       >
-        {/* Render Ride Offer Markers (Only Destination) */}
         {rideOffers.map(offer => (
           <Marker
             key={offer.id}
@@ -193,7 +181,6 @@ const MapViewDisplay = ({ rideOffers = [], rideRequests = [], initialRegion, onM
           />
         ))}
 
-        {/* Render Ride Request Markers */}
         {rideRequests.map(request => (
           <React.Fragment key={request.id}>
             <Marker
@@ -226,19 +213,11 @@ const MapViewDisplay = ({ rideOffers = [], rideRequests = [], initialRegion, onM
 };
 
 const MapScreen = () => {
-  console.log('MapScreen component is mounting!');
-  
   const { submittedRides } = useOffer();
   const [rideRequests, setRideRequests] = useState<RideRequest[]>([]);
   const [initialRegion, setInitialRegion] = useState<MapViewDisplayProps['initialRegion']>(undefined);
   const [selectedRide, setSelectedRide] = useState<RideOffer | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
-  console.log('MapScreen: submittedRides on mount:', submittedRides);
-
-  useEffect(() => {
-    console.log('MapScreen useEffect triggered');
-  }, []);
 
   const handleMarkerPress = (offer: RideOffer) => {
     setSelectedRide(offer);
@@ -250,46 +229,33 @@ const MapScreen = () => {
     setSelectedRide(null);
   };
 
-  // Prepare rideOffers for the map, converting from context's RideDetails
   const mapFriendlyRideOffers: RideOffer[] = useMemo(() => {
-    console.log('MapScreen: submittedRides from context:', submittedRides);
-    
-    const processedOffers = submittedRides
+    return submittedRides
     .map(rideDetail => {
-      console.log('Processing ride detail:', rideDetail);
-      
       const id = rideDetail.id || `offer-${Math.random().toString(36).substr(2, 9)}`;
       const ownerId = rideDetail.ownerId || 'temp-owner';
 
       if (typeof rideDetail.startLocation === 'string' || typeof rideDetail.endLocation === 'string') {
-        console.warn("Ride offer has string locations, needs geocoding:", rideDetail);
         return null;
       }
       
       if (!rideDetail.startLocation || !rideDetail.endLocation) {
-          console.warn("Ride offer has undefined start or end location:", rideDetail);
           return null;
       }
-
-      console.log('Ride offer processed successfully:', { id, ownerId, startLocation: rideDetail.startLocation, endLocation: rideDetail.endLocation });
 
       return {
         ...rideDetail,
         id,
         ownerId,
-        startLocation: rideDetail.startLocation as ContextLocationData, 
-        endLocation: rideDetail.endLocation as ContextLocationData,    
+        startLocation: rideDetail.startLocation as LocationData, 
+        endLocation: rideDetail.endLocation as LocationData,    
         time: rideDetail.time || new Date().toISOString(), 
       };
     })
     .filter((offer): offer is RideOffer => offer !== null);
-    
-    console.log('MapScreen: final mapFriendlyRideOffers:', processedOffers);
-    return processedOffers;
   }, [submittedRides]);
 
   useEffect(() => {
-    // Calculate initial region when data is available
     if (mapFriendlyRideOffers.length > 0 || rideRequests.length > 0) {
       const allLocations = [
         ...mapFriendlyRideOffers.map(o => o.startLocation),

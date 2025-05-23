@@ -34,30 +34,19 @@ type OfferContextType = {
 const OfferContext = createContext<OfferContextType | null>(null);
 
 export const OfferProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'}); //default yes split gas
+  const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'});
   const [submittedRides, setSubmittedRides] = useState<RideDetails[]>([]);
 
-  console.log('OfferContext: Current ride state:', ride); // Debug log
-  console.log('OfferContext: Current submittedRides:', submittedRides); // Debug log
-
   const setRide = (data: Partial<RideDetails>) => {
-    console.log('OfferContext: setRide called with:', data); // Debug log
     setRideState((prev) => ({ ...prev, ...data }));
   };
 
   const resetRide = () => {
-    console.log('OfferContext: resetRide called'); // Debug log
     setRideState({ splitGas: 'Yes'});
   };
 
   const submitRide = () => {
-    console.log('OfferContext: submitRide called!'); // Debug log
-    console.log('OfferContext: Current ride being submitted:', ride); // Debug log
-    setSubmittedRides((prev) => {
-      const newSubmittedRides = [...prev, ride];
-      console.log('OfferContext: New submittedRides array:', newSubmittedRides); // Debug log
-      return newSubmittedRides;
-    });
+    setSubmittedRides((prev) => [...prev, ride]);
     resetRide();
   };
 

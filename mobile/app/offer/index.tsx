@@ -47,7 +47,7 @@ export default function OfferList() {
         data={submittedRides}
         keyExtractor={(item, index) => item.id || index.toString()}
         renderItem={renderRideItem}
-        ListEmptyComponent={<Text style={{textAlign: 'center', marginTop: 20}}>No offers yet. Tap 'New Offer' to create one.</Text>}
+        ListEmptyComponent={<Text style={styles.emptyText}>No offers yet. Tap 'New Offer' to create one.</Text>}
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => router.push('/offer/form')}>
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 12,
   },
+  emptyText: { textAlign: 'center', marginTop: 20 },
   addButton: {
     position: 'absolute',
     right: 20,

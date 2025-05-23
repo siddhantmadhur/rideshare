@@ -16,13 +16,13 @@ if (typeof global.crypto.getRandomValues !== 'function') {
   };
 }
 
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Switch, Pressable, Platform, Alert, ActivityIndicator } from 'react-native';
 import { useOffer, LocationData } from '../../context/OfferContext';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useState } from 'react';
 
-const GOOGLE_API_KEY = 'AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk'; // Your API Key
+const GOOGLE_API_KEY = 'AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk';
 
 async function geocodeAddress(address: string): Promise<LocationData | null> {
   if (!address.trim()) return null;
@@ -54,7 +54,6 @@ export default function OfferForm() {
   const [selectedDateValue, setSelectedDateValue] = useState(new Date());
   const [selectedTimeValue, setSelectedTimeValue] = useState(new Date());
 
-  // Local state for address strings and loading
   const [startAddress, setStartAddress] = useState(
     typeof ride.startLocation === 'string' ? ride.startLocation : (ride.startLocationAddress || '')
   );
@@ -96,7 +95,6 @@ export default function OfferForm() {
         setRide({ endLocation: locationData, endLocationAddress: address });
       }
     } else {
-      // Show user-friendly error and keep the string
       Alert.alert(
         'Address not found', 
         `Could not find coordinates for "${address}". Please check the spelling and try again.`
@@ -272,7 +270,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   addressInput: {
-    paddingRight: 40, // Make room for loading indicator
+    paddingRight: 40,
   },
   loadingIndicator: {
     position: 'absolute',
