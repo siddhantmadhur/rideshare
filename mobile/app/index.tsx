@@ -1,73 +1,57 @@
-import { Alert, Platform, StyleSheet, Text, View } from 'react-native'
-import { signInWithGoogle } from '@/lib/auth'
-import { useEffect, useState } from 'react'
-import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
-import { Redirect, router } from 'expo-router'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { TextInput, Button, ProgressBar } from 'react-native-paper'
+import React, { useEffect, useState } from 'react';
+import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
+import { signInWithGoogle } from '@/lib/auth';
+import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth';
+import { Redirect } from 'expo-router';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { TextInput, Button, ProgressBar } from 'react-native-paper';
 
 const AndroidSignInOptions = () => {
-    const [alreadyMadeAccount, setAlreadyMadeAccount] = useState(false)
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-
-    const [loading, setLoading] = useState(false)
+    const [alreadyMadeAccount, setAlreadyMadeAccount] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const signInToAccount = async () => {
-        setLoading(true)
-        const auth = getAuth()
+        setLoading(true);
+        const authInstance = getAuth();
 
         try {
-            const res = auth.signInWithEmailAndPassword(email, password)
+            await authInstance.signInWithEmailAndPassword(email, password);
         } catch (e) {
-            Alert.alert('Error', `Couldn't create user: ${e}`)
+            Alert.alert('Error', `Couldn't sign in: ${e}`);
         }
-        setLoading(false)
-    }
+        setLoading(false);
+    };
 
     const createNewAccount = async () => {
-        setLoading(true)
+        setLoading(true);
 
         if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match')
-            console.log('passwords do not match')
-        } else {
-            const auth = getAuth()
-            try {
-                const res = await auth.createUserWithEmailAndPassword(
-                    email,
-                    password
-                )
-                console.log(res.user)
-            } catch (e) {
-                Alert.alert(
-                    'ERROR',
-                    'There was an error in creating the user: '
-                )
-                console.log(e)
-            }
+            Alert.alert('Error', 'Passwords do not match');
+            setLoading(false);
+            return;
+        } 
+        
+        const authInstance = getAuth();
+        try {
+            const res = await authInstance.createUserWithEmailAndPassword(email, password);
+            console.log(res.user);
+        } catch (e) {
+            Alert.alert('ERROR', `There was an error in creating the user: ${e}`);
+            console.log(e);
         }
-
-        setLoading(false)
-    }
+        
+        setLoading(false);
+    };
 
     if (loading) {
-        return <ProgressBar />
+        return <ProgressBar />;
     }
 
     return (
-        <View
-            style={{
-                flex: 1,
-                flexDirection: 'column',
-                gap: 10,
-                justifyContent: 'flex-end',
-                marginBottom: 100,
-                width: '80%',
-            }}
-        >
+        <View style={styles.formContainer}>
             {alreadyMadeAccount ? (
                 <>
                     <TextInput
@@ -86,12 +70,7 @@ const AndroidSignInOptions = () => {
                         autoCapitalize="none"
                         mode="outlined"
                     />
-                    <Button
-                        onPress={() => {
-                            signInToAccount()
-                        }}
-                        mode="contained"
-                    >
+                    <Button onPress={signInToAccount} mode="contained">
                         Sign In
                     </Button>
                 </>
@@ -121,95 +100,104 @@ const AndroidSignInOptions = () => {
                         mode="outlined"
                         onChangeText={setConfirmPassword}
                     />
-                    <Button
-                        onPress={() => {
-                            createNewAccount()
-                        }}
-                        mode="contained"
-                    >
+                    <Button onPress={createNewAccount} mode="contained">
                         Sign Up
                     </Button>
                 </>
             )}
-            <Button
-                onPress={() => {
-                    setAlreadyMadeAccount((e) => !e)
-                }}
-            >
-                {alreadyMadeAccount
-                    ? "Don't have an account?"
-                    : 'Already have an account?'}
+            <Button onPress={() => setAlreadyMadeAccount((e) => !e)}>
+                {alreadyMadeAccount ? "Don't have an account?" : 'Already have an account?'}
             </Button>
         </View>
-    )
-}
+    );
+};
+
 const AppleSignInOptions = () => {
     return (
         <Button
             onPress={async () => {
-                console.log('hi')
+                console.log('Attempting Google Sign-In...');
                 try {
-                    const res = await signInWithGoogle()
+                    const res = await signInWithGoogle();
+                    console.log('Google Sign-In success:', res);
                 } catch (e) {
-                    console.log('there was an err', e)
+                    console.log('Google Sign-In error:', e);
+                    Alert.alert('Sign-In Error', 'Could not sign in with Google.');
                 }
-                console.log('bye')
             }}
-            title="Sign in with Google"
-        ></Button>
-    )
-}
+        >
+            Sign in with Google
+        </Button>
+    );
+};
 
 export default function Index() {
-    const [user, setUser] = useState<null | FirebaseAuthTypes.User>(null)
-    const [initializing, setInitializing] = useState(true)
+    const [user, setUser] = useState<null | FirebaseAuthTypes.User>(null);
+    const [initializing, setInitializing] = useState(true);
 
     useEffect(() => {
         GoogleSignin.configure({
-            webClientId:
-                '679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com',
-        })
-        const subscriber = auth().onAuthStateChanged((user) => {
-            if (user) {
-                setUser(user)
-                console.log('User', user)
+            webClientId: '679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com',
+        });
+
+        const subscriber = auth().onAuthStateChanged((firebaseUser) => {
+            setUser(firebaseUser);
+            if (initializing) {
+                setInitializing(false);
             }
-            if (initializing) setInitializing(false)
-        })
-        return subscriber
-    }, [])
+            console.log('Auth state changed, user:', firebaseUser ? firebaseUser.uid : null);
+        });
+
+        return subscriber;
+    }, [initializing]);
 
     if (initializing) {
-        return null
-    }
-    if (user) {
-        return <Redirect href="/offer" />
+        return (
+            <View style={styles.loadingContainer}>
+                <ProgressBar indeterminate />
+                <Text>Loading...</Text>
+            </View>
+        );
     }
 
+    if (user) {
+        console.log('User is signed in, redirecting to /offer');
+        return <Redirect href="/offer" />;
+    }
+
+    console.log('No user signed in, showing sign-in options.');
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 5,
-                alignSelf: 'stretch',
-                paddingBlock: 30,
-            }}
-        >
-            <Text
-                style={{
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                }}
-            >
-                Welcome to RideShare
-            </Text>
-            {Platform.OS === 'ios' ? (
-                <AppleSignInOptions />
-            ) : (
-                <AndroidSignInOptions />
-            )}
+        <View style={styles.container}>
+            <Text style={styles.title}>Welcome to RideShare UCSC</Text>
+            {Platform.OS === 'ios' ? <AppleSignInOptions /> : <AndroidSignInOptions />}
         </View>
-    )
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingVertical: 50,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 30,
+    },
+    formContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        gap: 10,
+        justifyContent: 'flex-end',
+        marginBottom: 100,
+        width: '80%',
+    },
+});

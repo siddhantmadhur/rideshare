@@ -1,15 +1,26 @@
 import React, { createContext, useContext, useState } from 'react';
 
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
 export type RideDetails = {
+  id?: string;
+  ownerId?: string;
+  startLocation?: LocationData | string;
+  startLocationAddress?: string;
+  endLocation?: LocationData | string;
+  endLocationAddress?: string;
+  time?: string;
   passengers?: string;
   splitGas?: string;
-  pickup?: string;
-  dropoff?: string;
   carModel?: string;
-  date?: string;
-  time?: string;
   environment?: string;
   notes?: string;
+  pickupRadius?: number;
+  dropOffRadius?: number;
+  combinedCost?: number;
 };
 
 type OfferContextType = {
@@ -23,13 +34,16 @@ type OfferContextType = {
 const OfferContext = createContext<OfferContextType | null>(null);
 
 export const OfferProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'}); //default yes split gas
+  const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'});
   const [submittedRides, setSubmittedRides] = useState<RideDetails[]>([]);
 
-  const setRide = (data: Partial<RideDetails>) =>
+  const setRide = (data: Partial<RideDetails>) => {
     setRideState((prev) => ({ ...prev, ...data }));
+  };
 
-  const resetRide = () => setRideState({});
+  const resetRide = () => {
+    setRideState({ splitGas: 'Yes'});
+  };
 
   const submitRide = () => {
     setSubmittedRides((prev) => [...prev, ride]);

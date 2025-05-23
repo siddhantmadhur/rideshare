@@ -1,7 +1,30 @@
 // --- app/offer/review.tsx ---
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import { useOffer } from '../../context/OfferContext';
+import { useOffer, LocationData } from '../../context/OfferContext';
 import { router } from 'expo-router';
+
+// Helper to display location
+const formatLocationForDisplay = (locationData: LocationData | string | undefined, addressString: string | undefined): string => {
+  // Prioritize the human-readable address if available
+  if (addressString && addressString.trim()) {
+    return addressString;
+  }
+  // Fallback to showing coordinates if no address string is available
+  if (!locationData) return 'Not specified';
+  if (typeof locationData === 'string') return locationData;
+  return `Lat: ${locationData.latitude.toFixed(4)}, Lng: ${locationData.longitude.toFixed(4)}`;
+};
+
+// Helper to format ISO date string
+const formatDateTime = (isoString: string | undefined): string => {
+  if (!isoString) return 'Not specified';
+  try {
+    const date = new Date(isoString);
+    return `${date.toLocaleDateString()} at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  } catch (e) {
+    return 'Invalid date/time';
+  }
+};
 
 export default function ReviewOffer() {
   const { ride } = useOffer();
@@ -11,15 +34,14 @@ export default function ReviewOffer() {
       <Text style={styles.title}>Confirm your offer details</Text>
 
       <View style={styles.card}>
-        <Text>Pickup: {ride.pickup}</Text>
-        <Text>Dropoff: {ride.dropoff}</Text>
-        <Text>Passengers: {ride.passengers}</Text>
-        <Text>Split Gas: {ride.splitGas}</Text>
-        <Text>Car: {ride.carModel}</Text>
-        <Text>Date: {ride.date}</Text>
-        <Text>Time: {ride.time}</Text>
-        <Text>Environment: {ride.environment}</Text>
-        <Text>Notes: {ride.notes}</Text>
+        <Text>Pickup: {formatLocationForDisplay(ride.startLocation, ride.startLocationAddress)}</Text>
+        <Text>Dropoff: {formatLocationForDisplay(ride.endLocation, ride.endLocationAddress)}</Text>
+        <Text>Date & Time: {formatDateTime(ride.time)}</Text>
+        <Text>Passengers: {ride.passengers || 'Not specified'}</Text>
+        <Text>Split Gas: {ride.splitGas || 'Not specified'}</Text>
+        <Text>Car: {ride.carModel || 'Not specified'}</Text>
+        <Text>Environment: {ride.environment || 'Not specified'}</Text>
+        <Text>Notes: {ride.notes || 'Not specified'}</Text>
       </View>
 
       <Button title="Submit" onPress={() => router.push('/offer/thank-you')} />
