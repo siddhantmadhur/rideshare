@@ -9,11 +9,12 @@ import (
 )
 
 type UserDTO struct {
-	ID          string    `json:"id" gorm:"primaryKey"`
+	DisplayName string    `json:"name"`
 	Description string    `json:"description"`
 	Hobbies   []string  `json:"Hobbies"`
 }
 
+// Updates user's [rofile inforamtion
 func updateUserProfile (c echo.Context, u *auth.User,_ *firebase.App) error{
 	// get info from the request, bind it to a sturct
 	userDTO := new(UserDTO)
@@ -24,7 +25,7 @@ func updateUserProfile (c echo.Context, u *auth.User,_ *firebase.App) error{
 	}
 
 	updated := &auth.User{
-		ID: userDTO.ID,
+		DisplayName: userDTO.DisplayName,
 		Description: userDTO.Description,
 		Hobbies: userDTO.Hobbies,
 	}
