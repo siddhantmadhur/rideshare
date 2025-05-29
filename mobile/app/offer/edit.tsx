@@ -2,6 +2,8 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet, Alert, Switch, ScrollView} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { toISOIfValid } from '../utils/dateUtils';
+
 
 export default function EditRide() {
   const params = useLocalSearchParams();
@@ -50,6 +52,8 @@ export default function EditRide() {
     }
 
     try {
+      const timestamp = toISOIfValid(ride.date, ride.time);
+
       const token = await auth().currentUser?.getIdToken();
       const res = await fetch('http://localhost:8080/rides/update', {
         method: 'PUT',
@@ -57,7 +61,7 @@ export default function EditRide() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...ride, id: rideId }),
+        body: JSON.stringify({ ...ride, id: rideId, timestamp }),
       });
       if (!res.ok) throw new Error('Failed to update');
       Alert.alert('Ride updated');

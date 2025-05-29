@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
 import auth from '@react-native-firebase/auth'; 
+import { toISOIfValid } from '../utils/dateUtils';
 
 export default function ReviewOffer() {
   const { ride, resetRide } = useOffer();
@@ -13,8 +14,12 @@ export default function ReviewOffer() {
       if (!currentUser) {
         throw new Error('User not logged in');
       }
-      const token = await currentUser.getIdToken(); 
-  
+
+    if (!ride.date || !ride.time) {
+      throw new Error('Missing date or time');
+    }
+      const token = await currentUser.getIdToken();
+      
       const response = await fetch('http://localhost:8080/rides/create', {
         method: 'POST',
         headers: {
@@ -25,10 +30,10 @@ export default function ReviewOffer() {
           pickup: ride.pickup,
           dropoff: ride.dropoff,
           notes: ride.notes || '',
-          timestamp: new Date(`${ride.date}T${ride.time}:00`).toISOString(),
-          hasCar: ride.hasCar === 'Yes',
-          split_gas: ride.hasCar === 'Yes' && (ride.splitGas === 'Yes' || ride.splitGas === true),
-          split_uber: ride.hasCar === 'No' && (ride.splitUber === 'Yes' || ride.splitUber === true),
+          timestamp: toISOIfValid(ride.date, ride.time),
+          hasCar: ride.hasCar === true,
+          split_gas: ride.hasCar === true && ride.splitGas === true,
+          split_uber: ride.hasCar === false && ride.splitUber === true,
           passengers: ride.passengers,
           date: ride.date,
           time: ride.time,
@@ -38,14 +43,14 @@ export default function ReviewOffer() {
       });
       
       console.log("Status Code:", response.status);
-      const text = await response.text();
-      console.log("Server Response:", text);
-
+      const responseText = await response.text(); // read once
 
       if (!response.ok) {
-        const msg = await response.text();
-        throw new Error(msg || 'Submission failed');
+        throw new Error(responseText || 'Submission failed');
       }
+
+      console.log("Server response:", responseText);
+
 
       Alert.alert('Ride offer created!');
       resetRide(); // clear form
@@ -65,10 +70,10 @@ export default function ReviewOffer() {
         <Text>Dropoff: {ride.dropoff}</Text>
         <Text>Passengers: {ride.passengers}</Text>
         <Text>Has Car: {ride.hasCar}</Text>
-        {ride.hasCar === 'Yes' && (
+        {ride.hasCar === true && (
           <Text>Willing to Split Gas: {ride.splitGas}</Text>
         )}
-        {ride.hasCar === 'No' && (
+        {ride.hasCar === false && (
           <Text>Willing to Split Uber: {ride.splitUber}</Text>
         )}
         <Text>Car: {ride.carModel}</Text>

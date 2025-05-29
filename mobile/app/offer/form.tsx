@@ -1,27 +1,27 @@
 // --- app/offer/form.tsx ---
 import { Checkbox } from 'expo-checkbox';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Switch, Pressable, Platform } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, Pressable, Platform } from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
+import { toISOIfValid, convertTo24Hour } from '../utils/dateUtils';
+
 
 export default function OfferForm() {
   const { setRide, ride } = useOffer();
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const [hasCar, setHasCar] = useState<string | null>(null);
-  const [splitGasChecked, setSplitGasChecked] = useState(false);
-  const [splitUberChecked, setSplitUberChecked] = useState(false);
+  const [hasCar, setHasCar] = useState(false);
 
-  const updateHasCar = (value: string) => {
+  const updateHasCar = (value: boolean) => {
     setHasCar(value);
     setRide({ hasCar: value });
-    if (value === 'Yes') {
-      setRide({ splitUber: '' }); // Clear unrelated field
+    if (value === true) {
+      setRide({ splitUber: false }); // Clear unrelated field
     } else {
-      setRide({ splitGas: '' });
+      setRide({ splitGas: false });
     }
   };  
   
@@ -29,16 +29,38 @@ export default function OfferForm() {
   const validateForm = () => {
     const newErrors: { [key: string]: boolean } = {
       passengers: !ride.passengers || isNaN(Number(ride.passengers)),
-      hasCar: !ride.hasCar,
-      splitGas: ride.hasCar === 'Yes' && !ride.splitGas,
-      splitUber: ride.hasCar === 'No' && !ride.splitUber,
+      // dont need hasCar, splitGas, splitUber as mandatory inputs
       pickup: !ride.pickup,
       dropoff: !ride.dropoff,
-      carModel: hasCar === 'Yes' && !ride.carModel,
+      carModel: hasCar && !ride.carModel,
       date: !ride.date,
       time: !ride.time,
       environment: !ride.environment,
     };
+
+    try {
+      toISOIfValid(ride.date, ride.time);
+    } catch (err: any) {
+      newErrors.date = true;
+      newErrors.time = true;
+  
+      if (err.message.includes("Missing")) {
+        setErrors(newErrors);
+        return "Please select both date and time.";
+      } else if (err.message.includes("Invalid")) {
+        setErrors(newErrors);
+        return "Please enter a valid date and time.";
+      } else if (err.message.includes("future")) {
+        setErrors(newErrors);
+        return "Date and time must be in the future.";
+      }
+    }
+
+    const errorFields = Object.entries(newErrors).filter(([_, v]) => v).map(([k]) => k);
+    if (errorFields.length > 0) {
+      return "Please fill out all required fields correctly.";
+    }
+
     setErrors(newErrors);
     return !Object.values(newErrors).some(Boolean);
   };
@@ -61,33 +83,33 @@ export default function OfferForm() {
       <View style={styles.section}>
         <Text>Do you have a car for this ride? </Text>
         <View style={styles.subsection}>
-          <Pressable onPress={() => updateHasCar('Yes')} style={styles.radioOption}>
-            <Checkbox value={hasCar === 'Yes'} onValueChange={() => updateHasCar('Yes')} />
+          <Pressable onPress={() => updateHasCar(true)} style={styles.radioOption}>
+            <Checkbox value={hasCar === true} onValueChange={() => updateHasCar(true)} />
             <Text style={styles.radioLabel}>Yes</Text>
           </Pressable>
-          <Pressable onPress={() => updateHasCar('No')} style={styles.radioOption}>
-            <Checkbox value={hasCar === 'No'} onValueChange={() => updateHasCar('No')} />
+          <Pressable onPress={() => updateHasCar(false)} style={styles.radioOption}>
+            <Checkbox value={hasCar === false} onValueChange={() => updateHasCar(false)} />
             <Text style={styles.radioLabel}>No</Text>
           </Pressable>
         </View>
       </View>
       
-      {hasCar === 'Yes' && (
+      {hasCar === true && (
         <View style={styles.section}>
           <Text>Are you willing to split gas costs?</Text>
           <Checkbox
-            value={ride.splitGas === 'Yes'}
-            onValueChange={(value) => setRide({ splitGas: value ? 'Yes' : 'No' })}
+            value={ride.splitGas === true}
+            onValueChange={(value) => setRide({ splitGas: value ? true : false })}
           />
         </View>
       )}
 
-      {hasCar === 'No' && (
+      {hasCar === false && (
         <View style={styles.section}>
           <Text>Are you willing to split an Uber?</Text>
           <Checkbox
-            value={ride.splitUber === 'Yes'}
-            onValueChange={(value) => setRide({ splitUber: value ? 'Yes' : 'No' })}
+            value={ride.splitUber === true}
+            onValueChange={(value) => setRide({ splitUber: value ? true : false })}
           />
         </View>
       )}
@@ -137,14 +159,14 @@ export default function OfferForm() {
       {showDate && (
         <DateTimePicker
           mode="date"
-          value={new Date()}
+          value={ride.date ? new Date(ride.date) : new Date()}
           minimumDate={new Date()}
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={(event, selectedDate) => {
             setShowDate(false);
             if (selectedDate) {
-              const dateStr = selectedDate.toISOString().split('T')[0]; // "YYYY-MM-DD"
-              setRide({ date: dateStr });
+              const formattedDate = selectedDate.toLocaleDateString('en-US'); // MM/DD/YEAR
+              setRide({ date: formattedDate });
             }
           }}
         />
@@ -153,13 +175,16 @@ export default function OfferForm() {
       {showTime && (
         <DateTimePicker
           mode="time"
-          value={new Date()}
+          value={ride.time ? new Date(`1970-01-01T${convertTo24Hour(ride.time)}:00`) : new Date()}
           minimumDate={new Date()}
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={(event, selectedDate) => {
             setShowTime(false);
             if (selectedDate) {
-              const timeStr = selectedDate.toTimeString().slice(0, 5); // "HH:mm"
+              const timeStr = selectedDate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit'
+              });
               setRide({ time: timeStr });
             }
           }}
@@ -187,12 +212,14 @@ export default function OfferForm() {
       <Button 
         title="Next" 
         onPress={() => {
-          if(validateForm()){
-            router.push('/offer/review');
-          } 
-          else {
-            alert('Please fix the highlighted fields.');
-          }
+          setTimeout(() => {
+            const result = validateForm();
+            if (result === true) {
+              router.push('/offer/review');
+            } else {
+              Alert.alert("Fix Form", result as string);
+            }
+          }, 50);
         }}
         />
     </ScrollView>
