@@ -10,16 +10,21 @@ import (
 
 type RideOffer struct {
 	gorm.Model
-	ID        uint      `json:"id"`
-	Dropoff   string    `json:"dropoff" gorm:"not null"`
-	Timestamp time.Time `json:"timestamp" gorm:"not null"`
-	Notes     string    `json:"notes"`
-	User      auth.User `json:"-"`
-	UserID    string    `json:"user_id" gorm:"not null"` // took out unique so a uid can have more than 1 ride
-	Pickup    string    `json:"pickup" gorm:"not null"`
-	HasCar    bool      `json:"has_car" gorm:"not null"`
-	SplitGas  bool      `json:"split_gas" gorm:"not null"`
-	SplitUber bool      `json:"split_uber" gorm:"not null"`
+	ID          uint      `json:"id"`
+	Dropoff     string    `json:"dropoff" gorm:"not null"`
+	Timestamp   time.Time `json:"timestamp" gorm:"not null"`
+	Notes       string    `json:"notes"`
+	User        auth.User `json:"-"`
+	UserID      string    `json:"user_id" gorm:"not null"` // took out unique so a uid can have more than 1 ride
+	Pickup      string    `json:"pickup" gorm:"not null"`
+	HasCar      bool      `json:"has_car" gorm:"not null"`
+	SplitGas    bool      `json:"split_gas" gorm:"not null"`
+	SplitUber   bool      `json:"split_uber" gorm:"not null"`
+	Passengers  string    `json:"passengers"`
+	Date        string    `json:"date"`
+	Time        string    `json:"time"`
+	CarModel    string    `json:"car_model"`
+	Environment string    `json:"environment"`
 }
 
 // Create Ride Offer from the Driver

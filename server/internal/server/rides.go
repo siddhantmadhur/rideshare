@@ -11,7 +11,7 @@ import (
 )
 
 func createRidesRoute(c echo.Context, u *auth.User, _ *firebase.App) error {
-	fmt.Println("🚀 createRidesRoute called")
+	fmt.Println("createRidesRoute called")
 
 	// Upsert the user
 	if err := auth.CreateUser(&auth.User{

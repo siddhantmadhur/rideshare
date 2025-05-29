@@ -27,8 +27,13 @@ export default function ReviewOffer() {
           notes: ride.notes || '',
           timestamp: new Date(`${ride.date}T${ride.time}:00`).toISOString(),
           hasCar: ride.hasCar === 'Yes',
-          split_gas: ride.hasCar === 'Yes' && ride.splitGas === 'Yes',
-          split_uber: ride.hasCar === 'No' && ride.splitUber === 'Yes',
+          split_gas: ride.hasCar === 'Yes' && (ride.splitGas === 'Yes' || ride.splitGas === true),
+          split_uber: ride.hasCar === 'No' && (ride.splitUber === 'Yes' || ride.splitUber === true),
+          passengers: ride.passengers,
+          date: ride.date,
+          time: ride.time,
+          car_model: ride.carModel,
+          environment: ride.environment
         }),
       });
       

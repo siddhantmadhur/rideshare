@@ -1,6 +1,6 @@
 import { useLocalSearchParams, router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet, Alert, Switch, ScrollView} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 export default function EditRide() {
@@ -30,6 +30,8 @@ export default function EditRide() {
         if (!res.ok) throw new Error("Failed to fetch ride");
         const data = await res.json();
         setRide(data);
+        console.log("Loaded ride for edit:", data);
+
       } catch (err) {
         console.error("Fetch error:", err);
         Alert.alert("Error", "Failed to load ride");
@@ -83,6 +85,56 @@ export default function EditRide() {
         onChangeText={(text) => setRide({ ...ride, dropoff: text })}
         placeholder="Dropoff"
       />
+      <TextInput
+        style={styles.input}
+        value={ride.passengers}
+        keyboardType="numeric"
+        onChangeText={(text) => setRide({ ...ride, passengers: text })}
+        placeholder="Passengers"
+      />
+      <TextInput
+        style={styles.input}
+        value={ride.date}
+        onChangeText={(text) => setRide({ ...ride, date: text })}
+        placeholder="Date (YYYY-MM-DD)"
+      />
+      <TextInput
+        style={styles.input}
+        value={ride.time}
+        onChangeText={(text) => setRide({ ...ride, time: text })}
+        placeholder="Time (HH:mm)"
+      />
+      <View style={styles.switchRow}>
+        <Text>Has Car:</Text>
+        <Switch
+          value={ride.has_car}
+          onValueChange={(value) => setRide({ ...ride, has_car: value })}
+        />
+      </View>
+      {ride.has_car ? (
+        <View style={styles.switchRow}>
+          <Text>Willing to Split Gas:</Text>
+          <Switch
+            value={ride.willing_to_split_gas}
+            onValueChange={(value) => setRide({ ...ride, willing_to_split_gas: value })}
+          />
+        </View>
+      ) : (
+        <View style={styles.switchRow}>
+          <Text>Willing to Split Uber:</Text>
+          <Switch
+            value={ride.willing_to_split_uber}
+            onValueChange={(value) => setRide({ ...ride, willing_to_split_uber: value })}
+          />
+        </View>
+      )}
+      <TextInput
+        style={styles.input}
+        value={ride.notes}
+        onChangeText={(text) => setRide({ ...ride, notes: text })}
+        placeholder="Notes"
+        multiline
+      />
       <Button title="Save" onPress={handleSave} />
     </View>
   );
@@ -96,6 +148,12 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     padding: 12,
     borderRadius: 6,
+    marginBottom: 16,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
 });
