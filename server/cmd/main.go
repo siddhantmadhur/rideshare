@@ -11,6 +11,7 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"google.golang.org/api/option"
 )
 
@@ -31,8 +32,9 @@ func main() {
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 
 	e := echo.New()
+	e.Use(middleware.CORS())
 
 	server.Routes(e, app)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8080")) // go listens to all avail ips
 }

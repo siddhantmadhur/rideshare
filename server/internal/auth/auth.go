@@ -1,5 +1,9 @@
 package auth
 
+import (
+	"rideshare/internal/storage"
+)
+
 type User struct {
 	ID          string `json:"uid" gorm:"primaryKey"`
 	DisplayName string `json:"display_name" gorm:"not null"`
@@ -7,5 +11,10 @@ type User struct {
 }
 
 func CreateUser(u *User) error {
-	return nil
+	db, err := storage.GetConnection()
+	if err != nil {
+		return err
+	}
+
+	return db.FirstOrCreate(u, "id = ?", u.ID).Error
 }

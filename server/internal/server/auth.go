@@ -16,11 +16,17 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 	return func(c echo.Context) error {
 
 		reqToken := c.Request().Header.Get("Authorization")
-		bearerToken := strings.Split(reqToken, "Bearer ")
+		bearerToken := strings.SplitN(reqToken, "Bearer ", 2)
 
-		if len(reqToken) == 0 || len(bearerToken) == 0 {
+		if reqToken == "" || !strings.HasPrefix(reqToken, "Bearer ") {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"msg": "Bearer token not detected",
+			})
+		}
+
+		if len(bearerToken) != 2 || strings.TrimSpace(bearerToken[1]) == "" {
+			return c.JSON(http.StatusUnauthorized, map[string]string{
+				"msg": "Bearer token is empty or malformed",
 			})
 		}
 
@@ -39,7 +45,7 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 				"error": err.Error(),
 			})
 		}
-		tx, err := storage.GetConnection()
+		_, err = storage.GetConnection()
 		if err != nil {
 			return c.JSON(500, map[string]string{
 				"msg":   "There was a problem with connecting to the database",
@@ -48,12 +54,7 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 		}
 
 		var u auth.User
-		res := tx.First(&u, "id = ?", token.UID)
-		if res.Error != nil {
-			return c.JSON(http.StatusUnauthorized, map[string]string{
-				"msg": "User profile has not been created!",
-			})
-		}
+		u.ID = token.UID
 
 		return next(c, &u, app)
 	}

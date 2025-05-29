@@ -1,28 +1,55 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import auth from '@react-native-firebase/auth';
+import { useFocusEffect } from 'expo-router';
 
 type Ride = {
   id: number;
+  user_id: string;
   pickup: string;
   dropoff: string;
   passengers?: string;
   date?: string;
   time?: string;
+  has_car?: boolean;
+  willing_to_split_gas?: boolean;
+  willing_to_split_uber?: boolean;
 };
 
 export default function OfferList() {
   const [rides, setRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState(true);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchRides = async () => {
+        try {
+          const user = auth().currentUser;
+          if (!user) throw new Error("Not signed in");
 
-  useEffect(() => {
-    fetch('http://localhost:8080/rides') // use IP adress instead of localhost since we are running backend
-      .then((res) => res.json())
-      .then((data) => setRides(data))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
+          const token = await user.getIdToken();
+
+          const res = await fetch('http://localhost:8080/rides', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = await res.json();
+          setRides(data);
+        } catch (err) {
+          console.error("Fetch error:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchRides();
+
+    }, [])
+  
+  );
+  
 
   return (
     <View style={styles.container}>
@@ -33,16 +60,41 @@ export default function OfferList() {
       ) : (
         <FlatList
           data={rides}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text>Pickup: {item.pickup}</Text>
-              <Text>Dropoff: {item.dropoff}</Text>
-              <Text>Seats Available: {item.passengers || 'N/A'}</Text>  {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
-              <Text>Date: {item.date}</Text>
-              <Text>Time: {item.time}</Text>
-            </View>
-          )}
+          keyExtractor={(item, index) => item?.id?.toString?.() ?? index.toString()} // for rides that have undef vals, only on test values
+          renderItem={({ item }) => {
+            const currentUserId = auth().currentUser?.uid;
+            const isOwner = item.user_id === currentUserId;
+            console.log("Ride ID:", item.id);
+            console.log("Ride user_id:", item.user_id);
+            console.log("Current user ID:", auth().currentUser?.uid);
+
+                        
+            return (
+              <View style={styles.card}>
+                <Text>Pickup: {(item.pickup ?? 'N/A').toString()}</Text>
+                <Text>Dropoff: {(item.dropoff ?? 'N/A').toString()}</Text>
+                <Text>Seats Available: {(item.passengers ?? 'N/A').toString()}</Text>  {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
+                <Text>Date: {(item.date ?? 'N/A').toString()}</Text>
+                <Text>Time: {(item.time)}</Text>
+                <Text>Has Car: {item.has_car ? 'Yes' : 'No'}</Text>
+                {item.has_car && (
+                  <Text>Willing to Split Gas: {item.willing_to_split_gas ? 'Yes' : 'No'}</Text>
+                )}
+
+                {item.has_car === false && (
+                  <Text>Willing to Split Uber: {item.willing_to_split_uber ? 'Yes' : 'No'}</Text>
+                )}
+                {item.id && (
+                  <TouchableOpacity
+                    style={{ marginTop: 8, backgroundColor: '#007aff', padding: 8, borderRadius: 5 }}
+                    onPress={() => router.push({ pathname: "/offer/edit", params: { id: item.id.toString() } })}
+                  >
+                    <Text style={{ color: 'white', textAlign: 'center' }}>Edit</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            );
+          }}
           ListEmptyComponent={<Text>No offers yet.</Text>}
         />
       )}

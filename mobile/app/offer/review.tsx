@@ -26,10 +26,16 @@ export default function ReviewOffer() {
           dropoff: ride.dropoff,
           notes: ride.notes || '',
           timestamp: new Date(`${ride.date}T${ride.time}:00`).toISOString(),
-                  // Do not send user_id — backend can extract it from token
-
+          hasCar: ride.hasCar === 'Yes',
+          split_gas: ride.hasCar === 'Yes' && ride.splitGas === 'Yes',
+          split_uber: ride.hasCar === 'No' && ride.splitUber === 'Yes',
         }),
       });
+      
+      console.log("Status Code:", response.status);
+      const text = await response.text();
+      console.log("Server Response:", text);
+
 
       if (!response.ok) {
         const msg = await response.text();
@@ -53,7 +59,13 @@ export default function ReviewOffer() {
         <Text>Pickup: {ride.pickup}</Text>
         <Text>Dropoff: {ride.dropoff}</Text>
         <Text>Passengers: {ride.passengers}</Text>
-        <Text>Split Gas: {ride.splitGas}</Text>
+        <Text>Has Car: {ride.hasCar}</Text>
+        {ride.hasCar === 'Yes' && (
+          <Text>Willing to Split Gas: {ride.splitGas}</Text>
+        )}
+        {ride.hasCar === 'No' && (
+          <Text>Willing to Split Uber: {ride.splitUber}</Text>
+        )}
         <Text>Car: {ride.carModel}</Text>
         <Text>Date: {ride.date}</Text>
         <Text>Time: {ride.time}</Text>

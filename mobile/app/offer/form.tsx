@@ -1,4 +1,5 @@
 // --- app/offer/form.tsx ---
+import { Checkbox } from 'expo-checkbox';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Switch, Pressable, Platform } from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
@@ -10,14 +11,30 @@ export default function OfferForm() {
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const isGasSplit = ride.splitGas !== 'No';
+  const [hasCar, setHasCar] = useState<string | null>(null);
+  const [splitGasChecked, setSplitGasChecked] = useState(false);
+  const [splitUberChecked, setSplitUberChecked] = useState(false);
 
+  const updateHasCar = (value: string) => {
+    setHasCar(value);
+    setRide({ hasCar: value });
+    if (value === 'Yes') {
+      setRide({ splitUber: '' }); // Clear unrelated field
+    } else {
+      setRide({ splitGas: '' });
+    }
+  };  
+  
+  // for required inputs
   const validateForm = () => {
     const newErrors: { [key: string]: boolean } = {
       passengers: !ride.passengers || isNaN(Number(ride.passengers)),
+      hasCar: !ride.hasCar,
+      splitGas: ride.hasCar === 'Yes' && !ride.splitGas,
+      splitUber: ride.hasCar === 'No' && !ride.splitUber,
       pickup: !ride.pickup,
       dropoff: !ride.dropoff,
-      carModel: !ride.carModel,
+      carModel: hasCar === 'Yes' && !ride.carModel,
       date: !ride.date,
       time: !ride.time,
       environment: !ride.environment,
@@ -41,13 +58,41 @@ export default function OfferForm() {
         }}
       />
 
-      <View style={styles.switchRow}>
-        <Text>Split Gas?</Text>
-        <Switch
-          value={isGasSplit}
-          onValueChange={(value) => setRide({ splitGas: value ? 'Yes' : 'No' })}
-        />
+      <View style={styles.section}>
+        <Text>Do you have a car for this ride? </Text>
+        <View style={styles.subsection}>
+          <Pressable onPress={() => updateHasCar('Yes')} style={styles.radioOption}>
+            <Checkbox value={hasCar === 'Yes'} onValueChange={() => updateHasCar('Yes')} />
+            <Text style={styles.radioLabel}>Yes</Text>
+          </Pressable>
+          <Pressable onPress={() => updateHasCar('No')} style={styles.radioOption}>
+            <Checkbox value={hasCar === 'No'} onValueChange={() => updateHasCar('No')} />
+            <Text style={styles.radioLabel}>No</Text>
+          </Pressable>
+        </View>
       </View>
+      
+      {hasCar === 'Yes' && (
+        <View style={styles.section}>
+          <Text>Are you willing to split gas costs?</Text>
+          <Checkbox
+            value={ride.splitGas === 'Yes'}
+            onValueChange={(value) => setRide({ splitGas: value ? 'Yes' : 'No' })}
+          />
+        </View>
+      )}
+
+      {hasCar === 'No' && (
+        <View style={styles.section}>
+          <Text>Are you willing to split an Uber?</Text>
+          <Checkbox
+            value={ride.splitUber === 'Yes'}
+            onValueChange={(value) => setRide({ splitUber: value ? 'Yes' : 'No' })}
+          />
+        </View>
+      )}
+
+
 
       <TextInput
         placeholder="Pickup Location"
@@ -85,7 +130,7 @@ export default function OfferForm() {
       </Pressable>
 
       <Pressable onPress={() => setShowTime(true)} 
-      style={[styles.input,, errors.time && styles.error]}>
+      style={[styles.input, errors.time && styles.error]}>
         <Text>{ride.time || 'Select Time'}</Text>
       </Pressable>
 
@@ -164,12 +209,22 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 12,
   },
-  switchRow: {
+  radioOption: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginVertical: 6,
   },
+  radioLabel: {
+    marginLeft: 8,
+  },
+  section: {
+    marginBottom: 16,
+  },
+  subsection: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 8,
+  },  
   error: {
     borderColor: 'red',
   },

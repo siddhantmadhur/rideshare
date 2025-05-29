@@ -2,7 +2,9 @@ import React, { createContext, useContext, useState } from 'react';
 
 export type RideDetails = {
   passengers?: string;
+  hasCar?: string;
   splitGas?: string;
+  splitUber?: string;
   pickup?: string;
   dropoff?: string;
   carModel?: string;
@@ -21,7 +23,7 @@ type OfferContextType = {
 const OfferContext = createContext<OfferContextType | null>(null);
 
 export const OfferProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ride, setRideState] = useState<RideDetails>({ splitGas: 'Yes'}); //default yes split gas
+  const [ride, setRideState] = useState<RideDetails>({});
 
   const setRide = (data: Partial<RideDetails>) =>
     setRideState((prev) => ({ ...prev, ...data }));

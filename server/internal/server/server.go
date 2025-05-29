@@ -17,6 +17,6 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.PUT("/rides/update", ProtectRouteWithAuth(updateRideOffer, app))
 	e.DELETE("/rides/delete/:id", ProtectRouteWithAuth(deleteRideOffer, app))
 	e.GET("/rides", ProtectRouteWithAuth(getAllRides, app))
-
+	e.GET("/rides/:id", ProtectRouteWithAuth(getRideByID, app))
 
 }
