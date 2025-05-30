@@ -51,9 +51,17 @@ export default function EditRide() {
       return;
     }
 
+    let timestamp: string;
     try {
-      const timestamp = toISOIfValid(ride.date, ride.time);
+      timestamp = toISOIfValid(ride.date, ride.time);
+    } catch (err: any) {
+      console.error("Date validation error:", err.message);
+      Alert.alert("Fix Form", err.message);
+      return;
+    }
 
+
+    try {
       const token = await auth().currentUser?.getIdToken();
       const res = await fetch('http://localhost:8080/rides/update', {
         method: 'PUT',
