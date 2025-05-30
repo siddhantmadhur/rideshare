@@ -20,20 +20,20 @@ type RatingDTO struct{
 }
 
 func createReview (c echo.Context, u *auth.User, _ *firebase.App) error{
-	ratingDTO := new(RatingDTO)
-	if err := c.Bind(ratingDTO); err != nil{
+	dto := new(RatingDTO)
+	if err := c.Bind(dto); err != nil{
 		return c.JSON(http.StatusBadRequest, map[string] string{
 			"msg": "Invalid request",
 		})
 	}
 
 	newRating := &rating.Rating{
-		ReviewerId: ratingDTO.ReviewerId,
-		RecipientId: ratingDTO.RecipientId,
-		IsReviewerDriver: ratingDTO.IsReviewerDriver,
-		RideId: ratingDTO.RideId,
-		Rating: ratingDTO.Rating,
-		Description: ratingDTO.Description,
+		ReviewerId: 		dto.ReviewerId,
+		RecipientId: 		dto.RecipientId,
+		IsReviewerDriver: 	dto.IsReviewerDriver,
+		RideId: 			dto.RideId,
+		Rating: 			dto.Rating,
+		Description: 		dto.Description,
 	}
 
 	if err:= rating.CreateReview(newRating); err != nil{
@@ -42,20 +42,21 @@ func createReview (c echo.Context, u *auth.User, _ *firebase.App) error{
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
+	return c.JSON(http.StatusCreated, map[string]string{
 		"msg": "Successfully created review",
 	})
 }
 
 func deleteReview (c echo.Context, u *auth.User, _ *firebase.App) error{
 	rideID := c.Param("ride_id")
-	if rideID == ""{
+	rideIDInt, err := strconv.Atoi(rideID)
+	if err != nil{
 		return c.JSON(http.StatusBadRequest, map[string] string{
-			"msg": "Invalid request",
+			"msg": "Invalid ride ID",
 		})
 	}
 
-	rideIDInt, _ := strconv.Atoi(rideID)
+	
 
 	if err:= rating.DeleteReview(rideIDInt); err != nil{
 		return c.JSON(http.StatusInternalServerError, map[string]string{
@@ -63,9 +64,7 @@ func deleteReview (c echo.Context, u *auth.User, _ *firebase.App) error{
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
-		"msg": "Successfully deleted review",
-	})
+	return c.NoContent(http.StatusNoContent)
 }
 
 func listReviewsByDriver (c echo.Context, u *auth.User, _ *firebase.App) error{
@@ -76,13 +75,13 @@ func listReviewsByDriver (c echo.Context, u *auth.User, _ *firebase.App) error{
 		})
 	}
 
-	ratings, err := rating.ListReviewsByDriver(ID)
+	reviews, err := rating.ListReviewsByDriver(ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"msg": "Error fetching reviews",
 		})
 	}
-	return c.JSON(http.StatusOK, ratings)
+	return c.JSON(http.StatusOK, reviews)
 }
 
 func listReviewsByPassenger (c echo.Context, u *auth.User, _ *firebase.App) error{
@@ -93,13 +92,13 @@ func listReviewsByPassenger (c echo.Context, u *auth.User, _ *firebase.App) erro
 		})
 	}
 
-	ratings, err := rating.ListReviewsByPassenger(ID)
+	reviews, err := rating.ListReviewsByPassenger(ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"msg": "Error fetching reviews",
 		})
 	}
-	return c.JSON(http.StatusOK, ratings)
+	return c.JSON(http.StatusOK, reviews)
 }
 
 func getAverageRating (c echo.Context, u *auth.User, _ *firebase.App) error{
@@ -110,11 +109,14 @@ func getAverageRating (c echo.Context, u *auth.User, _ *firebase.App) error{
 		})
 	}
 
-	avgRating, err := rating.GetAverageRating(ID)
+	avg, cnt, err := rating.GetAverageRating(ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"msg": "Error fetching average rating",
 		})
 	}
-	return c.JSON(http.StatusOK, avgRating)
+	return c.JSON(http.StatusOK, map[string] interface{}{
+		"average_rating": avg,
+		"review_count":  cnt,
+	})
 }
