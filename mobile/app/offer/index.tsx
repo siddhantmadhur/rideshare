@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import { useOffer } from '../../context/OfferContext';
 import { router } from 'expo-router';
 import { useState, useEffect, useCallback } from 'react';
@@ -49,6 +49,38 @@ export default function OfferList() {
     }, [])
   
   );
+  const confirmDelete = (rideId: number) => {
+    Alert.alert(
+      "Delete Ride",
+      "Are you sure you want to delete this ride?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => deleteRide(rideId) }
+      ]
+    );
+  };
+  
+  const deleteRide = async (rideId: number) => {
+    try {
+      const token = await auth().currentUser?.getIdToken();
+      const res = await fetch(`http://localhost:8080/rides/delete/${rideId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!res.ok) throw new Error("Failed to delete ride");
+  
+      // refresh list
+      setRides((prev) => prev.filter((r) => r.id !== rideId));
+      Alert.alert("Deleted", "Ride was successfully deleted.");
+    } catch (err) {
+      console.error("Delete error:", err);
+      Alert.alert("Error", "Failed to delete ride.");
+    }
+  };
+  
   
 
   return (
@@ -84,13 +116,23 @@ export default function OfferList() {
                 {item.has_car === false && (
                   <Text>Willing to Split Uber: {item.willing_to_split_uber ? 'Yes' : 'No'}</Text>
                 )}
-                {item.id && (
-                  <TouchableOpacity
-                    style={{ marginTop: 8, backgroundColor: '#007aff', padding: 8, borderRadius: 5 }}
-                    onPress={() => router.push({ pathname: "/offer/edit", params: { id: item.id.toString() } })}
-                  >
-                    <Text style={{ color: 'white', textAlign: 'center' }}>Edit</Text>
-                  </TouchableOpacity>
+                {isOwner && item.id && (
+                  <>
+                    <TouchableOpacity
+                      style={{ marginTop: 8, backgroundColor: '#007aff', padding: 8, borderRadius: 5 }}
+                      onPress={() => router.push({ pathname: "/offer/edit", params: { id: item.id.toString() } })}
+                    >
+                      <Text style={{ color: 'white', textAlign: 'center' }}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, { marginTop: 6 }]}
+                      onPress={() => confirmDelete(item.id)}
+                    >
+                      <Text style={styles.buttonText}>Delete</Text>
+                    </TouchableOpacity>
+                  </>
+                  
+                  
                 )}
               </View>
             );
@@ -124,4 +166,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   addText: { color: 'white', fontWeight: '600' },
+  button: {
+    backgroundColor: '#d21f3c',
+    padding: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },  
 });
