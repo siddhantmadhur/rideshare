@@ -86,11 +86,12 @@ Edit name, contact info, and preferences.
 2. Click "Edit".
 3. Update info and save.
 
-**Expected Behavior:**  
+**Expected Behavior:** 
+
 - Confirmation of changes.
 - Updated info visible on profile.
 
 **Screenshot:**  
-![edit profile](screenshots/rid![IMG_7676](https://github.com/user-attachments/assets/2590253d-68b6-43a7-9796-2d5a236582dd)
-e_list.png)
-
+<img src="https://github.com/user-attachments/assets/b895bf64-af5f-4673-b47b-b83b667bec8b" width="200" />
+<img src="https://github.com/user-attachments/assets/d004c514-bfba-43cd-9deb-0657fb18093a" width="200" />
+<img src="https://github.com/user-attachments/assets/165e435b-0c91-4c1a-989f-41d56165a213" width="200" />
