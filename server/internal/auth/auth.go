@@ -48,7 +48,7 @@ func GetUserFromContext(c echo.Context, app *firebase.App) (*fbAuth.UserRecord, 
 
 	token, err := a.VerifyIDToken(context.Background(), bearerToken)
 	if err != nil {
-		return nil, errors.New("There was a problem with Firebase")
+		return nil, errors.New("There was an issue parsing ID Token")
 	}
 
 	fbUser, err := a.GetUser(context.Background(), token.UID)
