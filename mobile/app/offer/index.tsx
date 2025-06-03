@@ -1,3 +1,4 @@
+import Constants from 'expo-constants'
 import {
     View,
     Text,
@@ -13,6 +14,7 @@ import { router } from 'expo-router'
 import { useState, useEffect, useCallback } from 'react'
 import auth from '@react-native-firebase/auth'
 import { useFocusEffect } from 'expo-router'
+import { SERVER_URL } from '@/lib/constants'
 
 type Ride = {
     id: number
@@ -38,11 +40,7 @@ export default function OfferList() {
                     if (!user) throw new Error('Not signed in')
 
                     const token = await user.getIdToken()
-                    let url = 'http://localhost'
-                    if (Platform.OS === 'android') {
-                        url = 'http://10.0.2.2'
-                    }
-                    const res = await fetch(`${url}/rides`, {
+                    const res = await fetch(`${SERVER_URL}/rides`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
