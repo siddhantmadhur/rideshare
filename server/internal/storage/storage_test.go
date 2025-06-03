@@ -18,7 +18,7 @@ func TestConnection(t *testing.T) {
 	// DO THIS TO CREATE A MODEL / SCHEMA / TABLE on the DATABASE
 	type exampleModal struct {
 		gorm.Model
-		Username string `gorm:"not null;unique`
+		Username string `gorm:"not null"`
 	}
 	err = db.AutoMigrate(&exampleModal{})
 	if err != nil {

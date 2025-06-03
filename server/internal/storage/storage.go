@@ -21,3 +21,11 @@ func GetConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	return db, err
 }
+
+func CloseConnection(tx *gorm.DB) error {
+	db, err := tx.DB()
+	if err != nil {
+		return err
+	}
+	return db.Close()
+}

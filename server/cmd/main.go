@@ -34,6 +34,11 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
 
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format:           "${time_custom} [SERVER] ${status} - ${method} ${uri}\n",
+		CustomTimeFormat: "2006/01/02 15:04:05",
+	}))
+
 	server.Routes(e, app)
 
 	e.Logger.Fatal(e.Start(":8080")) // go listens to all avail ips
