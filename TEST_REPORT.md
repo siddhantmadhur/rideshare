@@ -41,18 +41,18 @@
 ### User Story 3  
 **As a user**, I want to check the past ratings/reviews of a driver/rider before a ride.
 
-**Scenario 3: Create a review (Pass/Fail)**
-1. finish a ride
-2. select ‘rate your ride’
-3. enter rating; type description(optional) 
-**Expected Output:** Review created message
-**Result:** ✅ Pass 
+**Scenario 3: Create a review (Pass/Fail)**  
+1. Finish a ride  
+2. Select ‘Rate Your Ride’ 
+3. Enter rating; type description(optional)  
+**Expected Output:** Review created message  
+**Result:** ✅ Pass  
 
-**Scenario 3: Show past ratings/reviews of a user (Pass/Fail)**  
+**Scenario 4: Show past ratings/reviews of a user (Pass/Fail)**  
 1. Select a user's profile
 2. Click on the user's rating
-3. user should see the past ratings/reviews of the person selected
-**Expected Output:** A list of reviews of being displayed
+3. user should see the past ratings/reviews of the person selected  
+**Expected Output:** A list of reviews of being displayed  
 **Result:** ✅ Pass 
 
 ---
