@@ -95,3 +95,29 @@ Edit name, contact info, and preferences.
 <img src="https://github.com/user-attachments/assets/b895bf64-af5f-4673-b47b-b83b667bec8b" width="200" />
 <img src="https://github.com/user-attachments/assets/d004c514-bfba-43cd-9deb-0657fb18093a" width="200" />
 <img src="https://github.com/user-attachments/assets/165e435b-0c91-4c1a-989f-41d56165a213" width="200" />
+
+---
+
+## 💬 Feature 7: Chat Feature
+
+**Description:**  
+Edit name, contact info, and preferences.
+
+**How to Use:**  
+1. Go to "Chat".
+2. Create a chat with the ride ID.
+3. Chat with the person of your choice.
+
+**Expected Behavior:** 
+
+- Sending messages back and forth.
+- Navigate to past chats.
+- Create a new chat.
+
+**Screenshot:** 
+<img src="https://github.com/user-attachments/assets/9513663f-808f-4f17-86be-0091a82ee906" width="200" />
+<img src="https://github.com/user-attachments/assets/930bf3c7-9ed2-4fcb-a772-bb52a279988d" width="200" />
+<img src="https://github.com/user-attachments/assets/7a2fdfbd-5575-4149-bf80-6ca9d6258719" width="200" />
+
+---
+ 
