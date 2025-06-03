@@ -17,7 +17,6 @@ func createRidesRoute(c echo.Context, u *auth.User, _ *firebase.App) error {
 	if err := auth.CreateUser(&auth.User{
 		ID:          u.ID,
 		DisplayName: "Firebase User", // or fetch from token.Claims["name"]
-		Age:         18,              // or default guess
 	}); err != nil {
 		return c.JSON(500, map[string]string{"message": "error creating user"})
 	}

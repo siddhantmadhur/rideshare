@@ -37,12 +37,6 @@ func ProtectRouteWithAuth(next func(echo.Context, *auth.User, *firebase.App) err
 			})
 		}
 
-		if len(bearerToken) != 2 || strings.TrimSpace(bearerToken[1]) == "" {
-			return c.JSON(http.StatusUnauthorized, map[string]string{
-				"msg": "Bearer token is empty or malformed",
-			})
-		}
-
 		a, err := app.Auth(context.Background())
 		if err != nil {
 			return c.JSON(500, map[string]string{
