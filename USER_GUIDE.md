@@ -115,6 +115,7 @@ Edit name, contact info, and preferences.
 - Create a new chat.
 
 **Screenshot:** 
+
 <img src="https://github.com/user-attachments/assets/9513663f-808f-4f17-86be-0091a82ee906" width="200" />
 <img src="https://github.com/user-attachments/assets/930bf3c7-9ed2-4fcb-a772-bb52a279988d" width="200" />
 <img src="https://github.com/user-attachments/assets/7a2fdfbd-5575-4149-bf80-6ca9d6258719" width="200" />
