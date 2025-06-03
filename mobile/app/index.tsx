@@ -2,9 +2,11 @@ import { Alert, Platform, StyleSheet, Text, View } from 'react-native'
 import { signInWithGoogle } from '@/lib/auth'
 import { useEffect, useState } from 'react'
 import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
-import { Redirect, router } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { TextInput, Button, ProgressBar } from 'react-native-paper'
+import { SERVER_URL } from '@/lib/constants'
+import { useAuthStore } from '@/lib/store'
 
 const AndroidSignInOptions = () => {
     const [alreadyMadeAccount, setAlreadyMadeAccount] = useState(false)
@@ -155,24 +157,36 @@ const AppleSignInOptions = () => {
                 }
                 console.log('bye')
             }}
-            title="Sign in with Google"
-        ></Button>
+        >
+            Sign in with Google
+        </Button>
     )
 }
 
 export default function Index() {
-    const [user, setUser] = useState<null | FirebaseAuthTypes.User>(null)
+    const user = useAuthStore((state) => state.user)
+    const setUser = useAuthStore((state) => state.setUser)
+
+    //const [user, setUser] = useState<null | FirebaseAuthTypes.User>(null)
     const [initializing, setInitializing] = useState(true)
+    const router = useRouter()
 
     useEffect(() => {
         GoogleSignin.configure({
             webClientId:
                 '679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com',
         })
-        const subscriber = auth().onAuthStateChanged((user) => {
+        const subscriber = auth().onAuthStateChanged(async (user) => {
             if (user) {
+                const res = await fetch(`${SERVER_URL}/user/current`, {
+                    headers: {
+                        Authorization: `Bearer ${await user.getIdToken()}`,
+                    },
+                })
                 setUser(user)
-                console.log('User', user)
+                if (res.status === 404) {
+                    router.replace('/profile/edit')
+                }
             }
             if (initializing) setInitializing(false)
         })

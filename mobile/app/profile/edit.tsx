@@ -1,25 +1,55 @@
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { router } from 'expo-router'
+import { SERVER_URL } from '@/lib/constants'
+import { User } from '@firebase/auth'
+import { useAuthStore } from '@/lib/store'
+import { useRouter } from 'expo-router'
 
 export default function EditProfile() {
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
-    const [tags, setTags] = useState('')
+    const [interests, setInterests] = useState('')
+    const [hobbies, setHobbies] = useState('')
     const [dob, setDob] = useState('')
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [gender, setGender] = useState('')
     const [selectedPronoun, setSelectedPronoun] = useState('')
     const [customPronoun, setCustomPronoun] = useState('')
 
-    const handleSave = () => {
+    const user = useAuthStore((state) => state.user)
+
+    const router = useRouter()
+    if (!user) {
+        return <div></div>
+    }
+
+    const handleSave = async () => {
         const finalPronouns =
             selectedPronoun === 'Other' ? customPronoun : selectedPronoun
-        router.push({
-            pathname: '/offer/view',
-            params: { name, desc, tags, dob, gender, pronouns: finalPronouns },
+        const token = await user.getIdToken(true)
+        const res = await fetch(`${SERVER_URL}/user/create`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                display_name: name,
+                country: 'USA',
+                description: desc,
+                interests: interests.split(','),
+                hobbies: hobbies.split(','),
+                date_of_birth: dob,
+                gender: gender,
+                pronouns: finalPronouns,
+            }),
         })
+        if (res.status === 201) {
+            router.replace('/offer/view')
+        } else {
+            console.log('not ok!')
+        }
     }
 
     return (
@@ -38,10 +68,16 @@ export default function EditProfile() {
                 style={styles.input}
             />
 
-            <Text>Tags</Text>
+            <Text>Hobbies</Text>
             <TextInput
-                placeholder="Tags"
-                onChangeText={setTags}
+                placeholder="Comma seperated: videogames,playing soccer,watching movies"
+                onChangeText={setHobbies}
+                style={styles.input}
+            />
+            <Text>Interests</Text>
+            <TextInput
+                placeholder="Comma seperated: videogames,playing soccer,watching movies"
+                onChangeText={setInterests}
                 style={styles.input}
             />
 
