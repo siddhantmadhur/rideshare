@@ -39,6 +39,8 @@ func GetUserProfile(uid string) (*User, error) {
 	return &profile, nil
 }
 
+
+// Returns only the ~Firebase~ user 
 func CreateUserProfile(uid string, profile *User) (*User, error) {
 	db, err := storage.GetConnection()
 	if err != nil {
@@ -77,3 +79,5 @@ func UpdateUserProfile(uid string, updatedProfile *User) (*User, error) {
 	}
 	return GetUserProfile(uid)
 }
+
+func Check
