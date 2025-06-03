@@ -62,8 +62,12 @@
 - **Test Framework Used**: Golang
 - **Location in Repo**: `tests/unit/`
                         `server/internal/server/`
+                        `server/internal/storage`
 - **Automated Test Result Summary**:
   - `auth.test.js` ✅ Passed  
   - `rideList.test.js` ❌ Failed – data not returned correctly
   - `rating_test.go` ✅ Passed
+  - `middleware_test.go` ✅ Passed
+  - `rides_test.go` ✅ Passed
+  - `storage_test.go` ✅ Passed
 - Be prepared to run these tests during the project review
