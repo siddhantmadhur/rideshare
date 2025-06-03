@@ -60,8 +60,10 @@
 ## 🧪 Unit Tests
 
 - **Test Framework Used**: Golang
-- **Location in Repo**: `tests/unit/`  
+- **Location in Repo**: `tests/unit/`
+                        `server/internal/server/`
 - **Automated Test Result Summary**:
   - `auth.test.js` ✅ Passed  
-  - `rideList.test.js` ❌ Failed – data not returned correctly  
+  - `rideList.test.js` ❌ Failed – data not returned correctly
+  - `rating_test.go` ✅ Passed
 - Be prepared to run these tests during the project review
