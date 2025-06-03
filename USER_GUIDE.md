@@ -91,5 +91,8 @@ Edit name, contact info, and preferences.
 - Updated info visible on profile.
 
 **Screenshot:**  
-![edit profile](screenshots/edit_profile.png)
+![edit profile](![IMG_7678](https://github.com/user-attachments/assets/6a0d9b74-8da9-4274-8cad-9f4465bf694c)
+![IMG_7677](https://github.com/user-attachments/assets/525de983-0f9f-4f9a-b993-ba7f4a4c7c0a)
+![IMG_7676](https://github.com/user-attachments/assets/75d917da-216b-4b01-bfdf-bc505c265419)
+)
 
