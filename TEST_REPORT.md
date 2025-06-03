@@ -60,9 +60,7 @@
 ## 🧪 Unit Tests
 
 - **Test Framework Used**: Golang
-- **Location in Repo**: `tests/unit/`
-                        `server/internal/server/`
-                        `server/internal/storage`
+- **Location in Repo**: `tests/unit/`, `server/internal/server/`, `server/internal/storage`, `server/internal/rating`
 - **Automated Test Result Summary**:
   - `auth.test.js` ✅ Passed  
   - `rideList.test.js` ❌ Failed – data not returned correctly
