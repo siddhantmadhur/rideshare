@@ -13,6 +13,12 @@ type User struct {
 	DisplayName string    `json:"display_name"`
 	Email       string    `json:"email" gorm:"unique"`
 	Country     string    `json:"country"`
+	Description string    `json:"description"`
+	Interests   []string  `json:"interests"`
+	Hobbies     []string  `json:"Hobbies"` 			
+	DateOfBirth time.Time `json:"date_of_birth"`        
+	Gender      string    `json:"gender"`
+	Pronouns    string    `json:"pronouns"`
 	CreatedAt   time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
