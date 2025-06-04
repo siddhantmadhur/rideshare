@@ -59,13 +59,26 @@
 
 ## 🧪 Unit Tests
 
-- **Test Framework Used**: Golang
-- **Location in Repo**: `tests/unit/`, `server/internal/server/`, `server/internal/storage`, `server/internal/rating`
-- **Automated Test Result Summary**:
-  - `auth.test.js` ✅ Passed  
-  - `rideList.test.js` ❌ Failed – data not returned correctly
-  - `rating_test.go` ✅ Passed
-  - `middleware_test.go` ✅ Passed
-  - `rides_test.go` ✅ Passed
-  - `storage_test.go` ✅ Passed
-- Be prepared to run these tests during the project review
+### rides_test.go
+
+- **Description**: Checking if a ride offer can be successfully created/deleted/updated.
+- **Locationo**: `server/internal/server/`
+- **Test Result**: ✅ Passed 
+
+### middleware_test.go
+
+- **Description**: Checking the middleware is working properly to extract authentication tokens from HTTP Authorization headers. 
+- **Locationo**: `server/internal/server/`
+- **Test Result**: ✅ Passed 
+
+### rating_test.go
+
+- **Description**: Checking if a review can be correctly created/deleted; and if rating.go can display reviews as list view.
+- **Locationo**: `server/internal/server/`, `server/internal/rating`
+- **Test Result**: ✅ Passed 
+
+### storage_test.go
+
+- **Description**: Verifing database connectivity and basic GORM operations.
+- **Locationo**: `server/internal/storage/`
+- **Test Result**: ✅ Passed
