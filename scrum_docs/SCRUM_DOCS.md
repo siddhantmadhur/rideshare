@@ -1,3 +1,6 @@
+# Sprint Plan (Spreadsheet)
+https://docs.google.com/spreadsheets/d/1JxlnatZHxTSt3OB2Wj7Jm1T8JuPXC9kC2QdFd4rRFe4/edit?usp=sharing
+
 # Initial Burn Up Chart
 <img width="401" alt="Screenshot 2025-06-03 at 6 49 22 PM" src="https://github.com/user-attachments/assets/4067c246-46d1-46cb-ae81-b5287564da2c" />
 
