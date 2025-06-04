@@ -24,8 +24,7 @@ Implement an estimated cost system for shared rides.
 
 ---
 
-## Complete List of User Stories  
-**[WARNING: POINTS NOT ACCURATE]**
+## Complete List of User Stories 
 
 ### Sprint 1
 - **Priority 1** — User Story 1.1 [14 pts]  
