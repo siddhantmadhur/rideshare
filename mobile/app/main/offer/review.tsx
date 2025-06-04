@@ -4,6 +4,7 @@ import { useOffer } from '@/context/OfferContext'
 import { router } from 'expo-router'
 import auth from '@react-native-firebase/auth'
 import { toISOIfValid } from '@/app/utils/dateUtils'
+import { SERVER_URL } from '@/lib/constants'
 
 export default function ReviewOffer() {
     const { ride, resetRide } = useOffer()
@@ -20,7 +21,7 @@ export default function ReviewOffer() {
             }
             const token = await currentUser.getIdToken(false)
 
-            const response = await fetch('http://localhost:8080/rides/create', {
+            const response = await fetch(`${SERVER_URL}/rides/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ export default function ReviewOffer() {
 
             Alert.alert('Ride offer created!')
             resetRide() // clear form
-            router.replace('/offer/thank-you')
+            router.replace('/main/offer/thank-you')
         } catch (err: any) {
             console.error(err)
             Alert.alert('Error', err.message || 'Failed to submit ride')

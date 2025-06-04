@@ -50,9 +50,15 @@ function Main() {
         <>
             <Stack
                 screenOptions={{
-                    headerShown: false,
+                    headerShown: true,
                 }}
-            />
+            >
+                <Stack.Screen
+                    name="profile"
+                    options={{ headerTitle: 'Profile' }}
+                />
+                <Stack.Screen name="offer" options={{ headerShown: false }} />
+            </Stack>
             <BottomNavigation.Bar
                 navigationState={{ index, routes }}
                 onTabPress={({ route }) => {

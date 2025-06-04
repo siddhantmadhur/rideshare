@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import { toISOIfValid } from '@/app/utils/dateUtils'
+import { SERVER_URL } from '@/lib/constants'
 
 export default function EditRide() {
     const params = useLocalSearchParams()
@@ -33,14 +34,11 @@ export default function EditRide() {
         const fetchRide = async () => {
             try {
                 const token = await auth().currentUser?.getIdToken()
-                const res = await fetch(
-                    `http://localhost:8080/rides/${rideId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                )
+                const res = await fetch(`${SERVER_URL}/rides/${rideId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
                 if (!res.ok) throw new Error('Failed to fetch ride')
                 const data = await res.json()
                 setRide(data)
@@ -73,7 +71,7 @@ export default function EditRide() {
 
         try {
             const token = await auth().currentUser?.getIdToken()
-            const res = await fetch('http://localhost:8080/rides/update', {
+            const res = await fetch(`${SERVER_URL}/rides/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

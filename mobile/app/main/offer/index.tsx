@@ -75,15 +75,12 @@ export default function OfferList() {
     const deleteRide = async (rideId: number) => {
         try {
             const token = await auth().currentUser?.getIdToken()
-            const res = await fetch(
-                `http://localhost:8080/rides/delete/${rideId}`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
+            const res = await fetch(`${SERVER_URL}/rides/delete/${rideId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
 
             if (!res.ok) throw new Error('Failed to delete ride')
 
@@ -98,8 +95,6 @@ export default function OfferList() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Your Ride Offers</Text>
-
             {loading ? (
                 <ActivityIndicator size="large" />
             ) : (
@@ -163,7 +158,8 @@ export default function OfferList() {
                                             }}
                                             onPress={() =>
                                                 router.push({
-                                                    pathname: '/offer/edit',
+                                                    pathname:
+                                                        '/main/offer/edit',
                                                     params: {
                                                         id: item.id.toString(),
                                                     },
@@ -203,7 +199,7 @@ export default function OfferList() {
 
             <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => router.push('/offer/form')}
+                onPress={() => router.push('/main/offer/form')}
             >
                 <Text style={styles.addText}>+ New Offer</Text>
             </TouchableOpacity>

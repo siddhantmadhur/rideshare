@@ -254,7 +254,7 @@ export default function OfferForm() {
                     setTimeout(() => {
                         const result = validateForm()
                         if (result === true) {
-                            router.push('/offer/review')
+                            router.push('/main/offer/review')
                         } else {
                             Alert.alert('Fix Form', result as string)
                         }
