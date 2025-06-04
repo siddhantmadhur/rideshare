@@ -62,23 +62,23 @@
 ### rides_test.go
 
 - **Description**: Checking if a ride offer can be successfully created/deleted/updated.
-- **Locationo**: `server/internal/server/`
+- **Directory**: `server/internal/server/`
 - **Test Result**: ✅ Passed 
 
 ### middleware_test.go
 
 - **Description**: Checking the middleware is working properly to extract authentication tokens from HTTP Authorization headers. 
-- **Locationo**: `server/internal/server/`
+- **Directory**: `server/internal/server/`
 - **Test Result**: ✅ Passed 
 
 ### rating_test.go
 
 - **Description**: Checking if a review can be correctly created/deleted; and if rating.go can display reviews as list view.
-- **Locationo**: `server/internal/server/`, `server/internal/rating`
+- **Directory**: `server/internal/server/`, `server/internal/rating`
 - **Test Result**: ✅ Passed 
 
 ### storage_test.go
 
 - **Description**: Verifing database connectivity and basic GORM operations.
-- **Locationo**: `server/internal/storage/`
+- **Directory**: `server/internal/storage/`
 - **Test Result**: ✅ Passed
