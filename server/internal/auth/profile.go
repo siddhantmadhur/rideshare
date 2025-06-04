@@ -29,6 +29,7 @@ type User struct {
 
 func GetUserProfile(uid string) (*User, error) {
 	db, err := storage.GetConnection()
+	defer storage.CloseConnection(db)
 	if err != nil {
 		return nil, err
 	}
@@ -59,6 +60,7 @@ func CreateUserProfile(uid string, profile *User) (*User, error) {
 
 func UpdateUserProfile(uid string, updatedProfile *User) (*User, error) {
 	db, err := storage.GetConnection()
+	defer storage.CloseConnection(db)
 	if err != nil {
 		return nil, err
 	}
@@ -72,12 +74,16 @@ func UpdateUserProfile(uid string, updatedProfile *User) (*User, error) {
 func GetUserProfileRoute(c echo.Context, app *firebase.App) error {
 	u, err := GetUserFromContext(c, app)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusUnauthorized, map[string]string{
+			"error": err.Error(),
+		})
 	}
 
 	profile, err := GetUserProfile(u.UID)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err)
+		return c.JSON(http.StatusNotFound, map[string]string{
+			"error": err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, profile)
 }

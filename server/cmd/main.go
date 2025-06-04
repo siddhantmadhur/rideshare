@@ -27,6 +27,8 @@ func main() {
 	tx.AutoMigrate(&auth.User{})
 	tx.AutoMigrate(&rides.RideOffer{})
 
+	storage.CloseConnection(tx)
+
 	opt := option.WithCredentialsFile("service-account.json")
 	// setup firebase
 	app, err := firebase.NewApp(context.Background(), nil, opt)

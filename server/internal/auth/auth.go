@@ -13,6 +13,7 @@ import (
 
 func CreateUser(u *User) error {
 	db, err := storage.GetConnection()
+	defer storage.CloseConnection(db)
 	if err != nil {
 		return err
 	}

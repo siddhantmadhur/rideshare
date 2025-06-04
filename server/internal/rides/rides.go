@@ -30,6 +30,7 @@ type RideOffer struct {
 // Create Ride Offer from the Driver
 func CreateRideOffer(r *RideOffer) error {
 	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
 	if err != nil {
 		return err
 	}
@@ -41,6 +42,7 @@ func CreateRideOffer(r *RideOffer) error {
 
 func UpdateRideOffer(r *RideOffer) error {
 	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
 	if err != nil {
 		return err
 	}
@@ -50,6 +52,7 @@ func UpdateRideOffer(r *RideOffer) error {
 
 func DeleteRideOffer(id uint) error {
 	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
 	if err != nil {
 		return err
 	}
@@ -59,6 +62,7 @@ func DeleteRideOffer(id uint) error {
 
 func GetAllRides() ([]RideOffer, error) {
 	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +73,7 @@ func GetAllRides() ([]RideOffer, error) {
 
 func GetRideByID(id uint) (RideOffer, error) {
 	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
 	if err != nil {
 		return RideOffer{}, err
 	}

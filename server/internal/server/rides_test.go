@@ -24,6 +24,7 @@ func mockUser() *auth.User {
 
 func resetRideOffersForUser(userID string) error {
 	db, err := storage.GetConnection()
+	defer storage.CloseConnection(db)
 	if err != nil {
 		return err
 	}
@@ -38,6 +39,7 @@ func resetRideOffersForUser(userID string) error {
 // Helper function to insert mock user into the database
 func insertMockUser(userID, displayName string, age int) error {
 	db, err := storage.GetConnection()
+	defer storage.CloseConnection(db)
 	if err != nil {
 		return err
 	}
