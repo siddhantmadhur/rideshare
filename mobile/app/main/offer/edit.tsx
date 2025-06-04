@@ -12,7 +12,7 @@ import {
     ScrollView,
 } from 'react-native'
 import auth from '@react-native-firebase/auth'
-import { toISOIfValid } from '../utils/dateUtils'
+import { toISOIfValid } from '@/app/utils/dateUtils'
 
 export default function EditRide() {
     const params = useLocalSearchParams()

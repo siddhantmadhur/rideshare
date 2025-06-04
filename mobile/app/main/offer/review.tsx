@@ -1,9 +1,9 @@
 // --- app/offer/review.tsx ---
 import { View, Text, Button, StyleSheet, ScrollView, Alert } from 'react-native'
-import { useOffer } from '../../context/OfferContext'
+import { useOffer } from '@/context/OfferContext'
 import { router } from 'expo-router'
 import auth from '@react-native-firebase/auth'
-import { toISOIfValid } from '../utils/dateUtils'
+import { toISOIfValid } from '@/app/utils/dateUtils'
 
 export default function ReviewOffer() {
     const { ride, resetRide } = useOffer()

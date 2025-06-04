@@ -103,4 +103,4 @@ function ProfileRoute() {
     )
 }
 
-export { ProfileRoute }
+export default ProfileRoute

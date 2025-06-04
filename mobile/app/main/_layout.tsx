@@ -1,7 +1,7 @@
-import { ProfileRoute } from '@/components/pages/Profile'
+import { Redirect, Stack, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
-import { BottomNavigation } from 'react-native-paper'
+import { BottomNavigation, Icon } from 'react-native-paper'
 
 const Profile = () => {
     return <Text>Profile</Text>
@@ -12,7 +12,7 @@ function Main() {
 
     const [routes] = useState([
         {
-            key: 'home',
+            key: 'offer',
             title: 'Home',
             focusedIcon: 'home-variant',
             unfocusedIcon: 'home-variant-outline',
@@ -38,19 +38,38 @@ function Main() {
     ])
 
     const renderScene = BottomNavigation.SceneMap({
-        profile: ProfileRoute,
+        profile: Profile,
         rides: Profile,
         search: Profile,
         home: Profile,
     })
 
+    const router = useRouter()
+
     return (
-        <BottomNavigation
-            safeAreaInsets={{ top: 0, bottom: 0 }}
-            navigationState={{ index, routes }}
-            onIndexChange={setIndex}
-            renderScene={renderScene}
-        />
+        <>
+            <Stack
+                screenOptions={{
+                    headerShown: false,
+                }}
+            />
+            <BottomNavigation.Bar
+                navigationState={{ index, routes }}
+                onTabPress={({ route }) => {
+                    const newIndex = routes.findIndex(
+                        (r) => r.key === route.key
+                    )
+                    if (newIndex !== -1) {
+                        setIndex(newIndex)
+                    }
+                    router.replace(`/main/${route.key}`)
+                }}
+                renderIcon={({ route, color }) => (
+                    <Icon source={route.focusedIcon} size={24} color={color} />
+                )}
+                getLabelText={({ route }) => route.title}
+            />
+        </>
     )
 }
 

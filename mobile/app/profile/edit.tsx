@@ -46,7 +46,7 @@ export default function EditProfile() {
             }),
         })
         if (res.status === 201) {
-            router.replace('/offer/view')
+            router.replace('/main/')
         } else {
             console.log('not ok!')
         }
@@ -94,7 +94,7 @@ export default function EditProfile() {
                     onChange={(event, selectedDate) => {
                         setShowDatePicker(false)
                         if (selectedDate) {
-                            setDob(selectedDate.toISOString().split('T')[0])
+                            setDob(selectedDate.toUTCString())
                         }
                     }}
                 />
