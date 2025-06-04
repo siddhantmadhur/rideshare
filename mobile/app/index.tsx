@@ -180,7 +180,7 @@ export default function Index() {
             if (user) {
                 const res = await fetch(`${SERVER_URL}/user/current`, {
                     headers: {
-                        Authorization: `Bearer ${await user.getIdToken()}`,
+                        Authorization: `Bearer ${await user.getIdToken(false)}`,
                     },
                 })
                 setUser(user)

@@ -27,7 +27,7 @@ export default function EditProfile() {
     const handleSave = async () => {
         const finalPronouns =
             selectedPronoun === 'Other' ? customPronoun : selectedPronoun
-        const token = await user.getIdToken(true)
+        const token = await user.getIdToken(false)
         const res = await fetch(`${SERVER_URL}/user/create`, {
             method: 'POST',
             headers: {
