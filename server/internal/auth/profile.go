@@ -79,7 +79,7 @@ func GetUserProfileRoute(c echo.Context, app *firebase.App) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err)
 	}
-	return c.JSON(http.StatusFound, profile)
+	return c.JSON(http.StatusOK, profile)
 }
 
 func CreateProfileRoute(c echo.Context, app *firebase.App) error {
