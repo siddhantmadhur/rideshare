@@ -18,7 +18,6 @@ Allows new users to create an account using their UCSC email and password.
 - User is redirected to the login page.
 
 **Screenshot:**  
-_Add screenshot here_  
 ![signup screenshot](screenshots/signup.png)
 
 ---
