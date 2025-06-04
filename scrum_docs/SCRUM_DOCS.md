@@ -1,9 +1,17 @@
+# Initial Burn Up Chart
+<img width="401" alt="Screenshot 2025-06-03 at 6 49 22 PM" src="https://github.com/user-attachments/assets/4067c246-46d1-46cb-ae81-b5287564da2c" />
+
+
+# Initial Scrum Board
+<img width="810" alt="image" src="https://github.com/user-attachments/assets/d6ed01f7-f108-42e2-9e5c-ed0ec260fb8c" />
+
 # Team Working Agreements
 
 - Be on time for all scheduled meetings and check-ins.  
 - Communicate blockers or delays early.  
 - Offer help when teammates are stuck.  
-- Use Discord for quick questions; prefer in-person or video calls for complex issues.  
+- Use Discord for qui
+- ck questions; prefer in-person or video calls for complex issues.  
 - No spamming — keep messages relevant and concise.  
 - Commit changes to your own branch and regularly push progress.
 - Keep issues and tasks updated.  
