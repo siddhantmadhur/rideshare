@@ -22,18 +22,26 @@
 ---
 
 ### User Story 2  
-**As a user**, I want to post a ride so that others can join.
+**As a user**, I want to post a ride plan so that others can see it.
 
 **Scenario 2: Post Ride (Pass/Fail)**  
 1. Log in to the app  
-2. Click the bottom right plus button on the list view to initiate a post  
+2. Go to “Post Ride”  
 3. Input:
-   - Pickup: UCSC East Remote  
-   - Destination: Santa Cruz Downtown  
-   - Time: 3:00 PM  
+   - Passengers: 10
+   - Has Car: No
+   - Willing to Split Uber: Yes
+   - Pickup: UCSC
+   - Dropoff: SJC
+   - Car: Black Mazda M3
+   - Date: 6/6/2025
+   - Time: 2:20 PM
+   - Environment: Clean
+   - Notes: (left blank)
 4. Click “Submit”  
-**Expected Output:** Ride added to list and PostgreSQL on pgAdmin4
+**Expected Output:** Ride added to list and on PostgreSQL (checked on pgAdmin4)
 **Result:** ✅ Pass 
+
 ---
 
 ### User Story 3  
