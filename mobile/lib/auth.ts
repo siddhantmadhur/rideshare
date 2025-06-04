@@ -3,6 +3,7 @@ import {
     GoogleSignin
 } from "@react-native-google-signin/google-signin"
 import firebase from "@react-native-firebase/app";
+import { Platform } from "react-native";
 
 
 // Your web app's Firebase configuration

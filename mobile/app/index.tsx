@@ -157,6 +157,7 @@ const AppleSignInOptions = () => {
                 }
                 console.log('bye')
             }}
+            mode="contained"
         >
             Sign in with Google
         </Button>
@@ -174,7 +175,7 @@ export default function Index() {
     useEffect(() => {
         GoogleSignin.configure({
             webClientId:
-                '679084923122-eetjotll4n8csr58cremro3j863spdr9.apps.googleusercontent.com',
+                '679084923122-ao9urrt2mjta2rrhfc74i1k8dir628pa.apps.googleusercontent.com',
         })
         const subscriber = auth().onAuthStateChanged(async (user) => {
             if (user) {
@@ -208,7 +209,7 @@ export default function Index() {
                 alignItems: 'center',
                 gap: 5,
                 alignSelf: 'stretch',
-                paddingBlock: 30,
+                paddingBlock: 120,
             }}
         >
             <Text

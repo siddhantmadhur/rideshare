@@ -5,6 +5,7 @@ import { SERVER_URL } from '@/lib/constants'
 import { User } from '@firebase/auth'
 import { useAuthStore } from '@/lib/store'
 import { useRouter } from 'expo-router'
+import { SafeAreaView } from 'react-native'
 
 export default function EditProfile() {
     const [name, setName] = useState('')
@@ -53,6 +54,8 @@ export default function EditProfile() {
     }
 
     return (
+        <>
+        <SafeAreaView />
         <View style={styles.container}>
             <Text>Name</Text>
             <TextInput
@@ -130,6 +133,8 @@ export default function EditProfile() {
 
             <Button title="Save" onPress={handleSave} />
         </View>
+
+        </>
     )
 }
 
