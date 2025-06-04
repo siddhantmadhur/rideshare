@@ -1,4 +1,4 @@
-# 📘 User Guide for [Project Name]
+# 📘 User Guide for RideShare
 
 Welcome to the user guide for our app! Below you'll find a list of key features and how to use them.
 ---
@@ -40,38 +40,90 @@ Authenticate with email and password to access the app.
 
 ---
 
-## 🚗 Feature 3: Post a Ride
+## 🚗 Feature 3A: Post a Ride
 
 **Description:**  
-Lets users post ride offers with date, time, and route.
+Lets users post/ share their ride plan by entering trip details like date, time, pickup/dropoff, and preferences.
 
 **How to Use:**  
-1. Go to "Post Ride".
-2. Fill out the ride details.
-3. Click "Submit".
+1. Tap the blue plus button on the bottom right of the list view of posts. 
+2. Fill out all required fields:
+   - Number of Passengers
+   - Do you have a car? (Yes/No)
+    - If Yes --> Willing to split gas?
+    - If No --> Willing to split Uber?
+   - Start location
+   - Destination
+   - Car model
+   - Date and time
+   - Car environment
+   - Optional: Notes (e.g., “No trunk space”, “Pet-friendly”)
+3. Tap **“Next”** to review the user input. Go **"Back"** if needed.
+4. Tap **“Submit”** to post the ride.
 
 **Expected Behavior:**  
-- Ride appears in the public list.
+- A new ride plan is created and visible on the ride list screen.
 
-**Screenshot:**  
-![ride post](screenshots/post_ride.png)
+**Screenshots:**  
+<img src="https://github.com/user-attachments/assets/95e7f9c2-8720-4a3d-9c52-6b487eb290c2" width="200" />
+<img src="https://github.com/user-attachments/assets/368afc5f-20a3-468d-806d-0839246bbe55" width="200" />
+<img src="https://github.com/user-attachments/assets/a51507ff-e1d4-4680-95c0-819a7352c8b9" width="200" />
+<img src="https://github.com/user-attachments/assets/3edd02f8-466b-4f54-b8e2-6952e3a8dd83" width="200" />
+
+
 
 ---
+
+## ✏️ Feature 3B: Edit a Ride
+
+**Description:**  
+Users can update an existing ride plan post if their plans change.
+
+**How to Use:**  
+1. Tap **“Edit”** on the ride card you created.
+2. Modify any ride details.
+3. Tap **“Save”**.
+
+**Expected Behavior:**  
+- Ride offer is updated and changes are reflected immediately.
+
+**Screenshot:**  
+<img src="https://github.com/user-attachments/assets/748528cb-827a-4257-8c9f-1cad2d488bff" width="200" />
+<img src="https://github.com/user-attachments/assets/4f18fc9d-4c16-4f8f-9bd6-a69c59236957" width="200" />
+
+---
+
+## ❌ Feature 3C: Delete a Ride
+
+**Description:**  
+Users can remove a ride plan they've posted.
+
+**How to Use:**  
+1. Tap **“Delete”** on the ride card you posted.
+2. Confirm deletion in the pop-up.
+
+**Expected Behavior:**  
+- Ride offer is removed from the ride list.
+
+**Screenshot:**  
+<img src="https://github.com/user-attachments/assets/6faf2c7b-3222-4f01-8e86-75650bcf5dc1" width="200" />
+<img src="https://github.com/user-attachments/assets/790be3cd-56ec-4c35-b77a-428047a99f2f" width="200" />
+
 
 ## 🔍 Feature 4: View Available Rides
 
 **Description:**  
-View all posted rides with filters and ride details.
+View all posted ride plans with ride details.
 
 **How to Use:**  
-1. Navigate to the "Find Rides" tab.
-2. Browse or search rides.
+1. Navigate to the list view of rides.
+2. Scroll through cards to find a ride.
 
 **Expected Behavior:**  
 - List of available rides appears with key info.
 
 **Screenshot:**  
-![ride list](screenshots/ride_list.png)
+<img src="https://github.com/user-attachments/assets/b1e55115-5112-453f-8524-f7f430337f46" width="200" />
 
 ---
 
