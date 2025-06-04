@@ -1,3 +1,4 @@
+import { ProfileRoute } from '@/components/pages/Profile'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { BottomNavigation } from 'react-native-paper'
@@ -10,6 +11,12 @@ function Main() {
     const [index, setIndex] = useState(0)
 
     const [routes] = useState([
+        {
+            key: 'home',
+            title: 'Home',
+            focusedIcon: 'home-variant',
+            unfocusedIcon: 'home-variant-outline',
+        },
         {
             key: 'rides',
             title: 'Rides',
@@ -31,13 +38,15 @@ function Main() {
     ])
 
     const renderScene = BottomNavigation.SceneMap({
-        profile: Profile,
+        profile: ProfileRoute,
         rides: Profile,
         search: Profile,
+        home: Profile,
     })
 
     return (
         <BottomNavigation
+            safeAreaInsets={{ top: 0, bottom: 0 }}
             navigationState={{ index, routes }}
             onIndexChange={setIndex}
             renderScene={renderScene}
