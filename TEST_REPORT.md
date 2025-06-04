@@ -6,17 +6,16 @@
 
 ## ✅ System Test Scenarios
 
-### User Story 1  
+### User Story 1 
 **As a user**, I want to create an account so that I can use the app.
 
 **Scenario 1: Create Account (Pass/Fail)**  
-1. Start the app  
-2. Select ‘New User’  
+1. Start the app   
 3. Input:  
-   - Name: Jane  
+   - Email Address: Jane  
    - Password: MySecurePass  
    - Confirm Password: MySecurePass  
-4. Press “Register”  
+4. Press “Sign Up”  
 **Expected Output:** Account created message  
 **Result:** ✅ Pass  
 
@@ -27,15 +26,14 @@
 
 **Scenario 2: Post Ride (Pass/Fail)**  
 1. Log in to the app  
-2. Go to “Post Ride”  
+2. Click the bottom right plus button on the list view to initiate a post  
 3. Input:
    - Pickup: UCSC East Remote  
    - Destination: Santa Cruz Downtown  
    - Time: 3:00 PM  
 4. Click “Submit”  
-**Expected Output:** Ride added to list  
-**Result:** ❌ Fail – doesn’t appear until manual refresh  
-
+**Expected Output:** Ride added to list and PostgreSQL on pgAdmin4
+**Result:** ✅ Pass 
 ---
 
 ### User Story 3  
