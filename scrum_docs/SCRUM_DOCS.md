@@ -1,9 +1,9 @@
 # Sprint Plan (Spreadsheet)
-[Sprint Plan SpreadSheet
+[Sprint Plan Spreadsheet
 ](https://docs.google.com/spreadsheets/d/1tmSRyWA6JefFeFS_9EEcLunIjvr7DFBf1u24YFj8k5M/edit?gid=1311804720#gid=1311804720)
 
 # Sprint Report (Spreadsheet)
-[Sprint Report SpreadSheet](https://docs.google.com/spreadsheets/d/1tmSRyWA6JefFeFS_9EEcLunIjvr7DFBf1u24YFj8k5M/edit?gid=1149744209#gid=1149744209)
+[Sprint Report Spreadsheet](https://docs.google.com/spreadsheets/d/1tmSRyWA6JefFeFS_9EEcLunIjvr7DFBf1u24YFj8k5M/edit?gid=1149744209#gid=1149744209)
 
 # Initial Burn Up Chart
 <img width="401" alt="Screenshot 2025-06-03 at 6 49 22 PM" src="https://github.com/user-attachments/assets/4067c246-46d1-46cb-ae81-b5287564da2c" />
@@ -17,8 +17,7 @@
 - Be on time for all scheduled meetings and check-ins.  
 - Communicate blockers or delays early.  
 - Offer help when teammates are stuck.  
-- Use Discord for qui
-- ck questions; prefer in-person or video calls for complex issues.  
+- Use Discord for quick questions; prefer in-person or video calls for complex issues.  
 - No spamming — keep messages relevant and concise.  
 - Commit changes to your own branch and regularly push progress.
 - Keep issues and tasks updated.  
