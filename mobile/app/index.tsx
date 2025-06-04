@@ -197,7 +197,7 @@ export default function Index() {
         return null
     }
     if (user) {
-        return <Redirect href="/offer" />
+        return <Redirect href="/main" />
     }
 
     return (
