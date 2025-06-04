@@ -1,6 +1,6 @@
 import { SERVER_URL } from '@/lib/constants'
 import { useAuthStore } from '@/lib/store'
-import { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
 import { Redirect, useRouter } from 'expo-router'
 import { useEffect, useMemo, useState } from 'react'
 import { Image, Text, View } from 'react-native'
@@ -33,6 +33,7 @@ const getProfileInformation = async (user: FirebaseAuthTypes.User) => {
 
 function ProfileRoute() {
     const user = useAuthStore((state) => state.user)
+    const setUser = useAuthStore((state) => state.setUser)
     const router = useRouter()
 
     const [loading, setLoading] = useState(true)
@@ -98,6 +99,25 @@ function ProfileRoute() {
                     {profileInformation?.pronouns}
                 </Text>
                 <Text>{profileInformation?.description}</Text>
+                <View
+                    style={{
+                        marginTop: 50,
+                    }}
+                >
+                    <Button
+                        onPress={() => {
+                            auth()
+                                .signOut()
+                                .then(() => {
+                                    setUser(null)
+                                    router.replace('/')
+                                })
+                        }}
+                        mode="contained"
+                    >
+                        Sign Out
+                    </Button>
+                </View>
             </View>
         </>
     )

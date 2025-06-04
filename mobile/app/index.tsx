@@ -1,7 +1,11 @@
 import { Alert, Platform, StyleSheet, Text, View } from 'react-native'
 import { signInWithGoogle } from '@/lib/auth'
 import { useEffect, useState } from 'react'
-import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
+import auth, {
+    FirebaseAuthTypes,
+    getAuth,
+    signOut,
+} from '@react-native-firebase/auth'
 import { Redirect, useRouter } from 'expo-router'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { TextInput, Button, ProgressBar } from 'react-native-paper'
@@ -187,6 +191,9 @@ export default function Index() {
                 setUser(user)
                 if (res.status === 404) {
                     router.replace('/profile/edit')
+                } else if (res.status === 401) {
+                    auth().signOut()
+                    router.reload()
                 }
             }
             if (initializing) setInitializing(false)
