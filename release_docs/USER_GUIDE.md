@@ -18,7 +18,8 @@ Allows new users to create an account using their UCSC email and password.
 - User is redirected to the login page.
 
 **Screenshot:**  
-![signup screenshot](screenshots/signup.png)
+<img width="200" alt="Screenshot 2025-06-04 at 3 06 53 PM" src="https://github.com/user-attachments/assets/f8721850-df77-4201-9bdd-f50def43fe94" />
+
 
 ---
 
@@ -29,14 +30,14 @@ Authenticate with email and password to access the app.
 
 **How to Use:**  
 1. Enter your email and password.
-2. Click "Login".
+2. Click "Sign in".
 
 **Expected Behavior:**  
 - Redirect to dashboard on success.
 - Error message for invalid login.
 
 **Screenshot:**  
-![login screenshot](screenshots/login.png)
+<img width="200" alt="Screenshot 2025-06-04 at 3 07 29 PM" src="https://github.com/user-attachments/assets/b26f2c3d-942c-4534-a8a8-3a5e62ce0f04" />
 
 ---
 
