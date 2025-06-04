@@ -35,5 +35,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# firebase admin access
+**/service-account.json
 app-example
 server/service-account.json
