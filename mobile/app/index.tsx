@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Alert, Platform, StyleSheet, Text, View } from 'react-native'
 import { signInWithGoogle } from '@/lib/auth'
 import { useEffect, useState } from 'react'
@@ -153,7 +154,6 @@ const AppleSignInOptions = () => {
     return (
         <Button
             onPress={async () => {
-                console.log('hi')
                 try {
                     const res = await signInWithGoogle()
                 } catch (e) {
@@ -205,7 +205,7 @@ export default function Index() {
         return null
     }
     if (user) {
-        return <Redirect href="/main" />
+        return <Redirect href="/main/offer" />
     }
 
     return (

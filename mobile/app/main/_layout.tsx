@@ -24,10 +24,10 @@ function Main() {
             unfocusedIcon: 'car-back',
         },
         {
-            key: 'search',
-            title: 'Search',
-            focusedIcon: 'magnify',
-            unfocusedIcon: 'magnify',
+            key: 'chat',
+            title: 'Chat',
+            focusedIcon: 'chat',
+            unfocusedIcon: 'chat-outline',
         },
         {
             key: 'profile',
@@ -58,6 +58,8 @@ function Main() {
                     options={{ headerTitle: 'Profile' }}
                 />
                 <Stack.Screen name="offer" options={{ headerShown: false }} />
+                <Stack.Screen name="rides/index" options={{ headerTitle: 'Rides' }} />
+                <Stack.Screen name="rides/detailed" options={{ headerTitle: '' }} />
             </Stack>
             <BottomNavigation.Bar
                 navigationState={{ index, routes }}
@@ -70,9 +72,13 @@ function Main() {
                     }
                     router.replace(`/main/${route.key}`)
                 }}
-                renderIcon={({ route, color }) => (
-                    <Icon source={route.focusedIcon} size={24} color={color} />
-                )}
+                renderIcon={({ route, color }) => {
+                    const idx = routes.findIndex((r) => r.key === route.key)
+
+                    return (
+                        <Icon source={ idx === index ? route.focusedIcon : route.unfocusedIcon} size={24} color={color} />
+                    )
+                }}
                 getLabelText={({ route }) => route.title}
             />
         </>

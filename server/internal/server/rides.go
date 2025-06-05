@@ -86,7 +86,7 @@ func getAllRides(c echo.Context) error {
 	return c.JSON(200, r)
 }
 
-func getRideByID(c echo.Context, u *auth.User, _ *firebase.App) error {
+func getRideByID(c echo.Context) error {
 	rideIDStr := c.Param("id")
 	rideID, err := strconv.ParseUint(rideIDStr, 10, 64)
 	if err != nil {
@@ -97,6 +97,9 @@ func getRideByID(c echo.Context, u *auth.User, _ *firebase.App) error {
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "cound not get ride with id"})
 	}
-	return c.JSON(200, ride)
+
+	return c.JSON(200, map[string]any{
+		"info": ride,
+	})
 
 }

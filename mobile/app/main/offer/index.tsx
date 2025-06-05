@@ -40,7 +40,7 @@ export default function OfferList() {
                     if (!user) throw new Error('Not signed in')
 
                     const token = await user.getIdToken()
-                    const res = await fetch(`${SERVER_URL}/rides`, {
+                    const res = await fetch(`${SERVER_URL}/rides/user`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -106,9 +106,6 @@ export default function OfferList() {
                     renderItem={({ item }) => {
                         const currentUserId = auth().currentUser?.uid
                         const isOwner = item.user_id === currentUserId
-                        console.log('Ride ID:', item.id)
-                        console.log('Ride user_id:', item.user_id)
-                        console.log('Current user ID:', auth().currentUser?.uid)
 
                         return (
                             <View style={styles.card}>
@@ -131,23 +128,23 @@ export default function OfferList() {
                                 <Text>
                                     Has Car: {item.has_car ? 'Yes' : 'No'}
                                 </Text>
-                                {item.has_car && (
+                                {item.has_car ? (
                                     <Text>
                                         Willing to Split Gas:{' '}
                                         {item.willing_to_split_gas
                                             ? 'Yes'
                                             : 'No'}
                                     </Text>
-                                )}
-                                {item.has_car === false && (
+                                ) : null}
+                                {item.has_car === false ? (
                                     <Text>
                                         Willing to Split Uber:{' '}
                                         {item.willing_to_split_uber
                                             ? 'Yes'
                                             : 'No'}
                                     </Text>
-                                )}
-                                {isOwner && item.id && (
+                                ) : null}
+                                {isOwner && item.id ? (
                                     <>
                                         <TouchableOpacity
                                             style={{
@@ -189,7 +186,7 @@ export default function OfferList() {
                                             </Text>
                                         </TouchableOpacity>
                                     </>
-                                )}
+                                ) : null}
                             </View>
                         )
                     }}

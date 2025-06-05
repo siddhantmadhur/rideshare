@@ -60,14 +60,19 @@ func DeleteRideOffer(id uint) error {
 	return res.Error
 }
 
-func GetAllRides() ([]RideOffer, error) {
+type UserRide struct {
+	RideOffer
+	DisplayName string `json:"display_name"`
+}
+
+func GetAllRides() ([]UserRide, error) {
 	tx, err := storage.GetConnection()
 	defer storage.CloseConnection(tx)
 	if err != nil {
 		return nil, err
 	}
-	var rides []RideOffer
-	err = tx.Find(&rides).Error
+	var rides []UserRide
+	err = tx.Table("ride_offers").Select("ride_offers.*, users.display_name").Joins("left join users on users.id = ride_offers.user_id").Scan(&rides).Error
 	return rides, err
 }
 

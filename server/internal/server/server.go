@@ -21,7 +21,8 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.DELETE("/rides/delete/:id", ProtectRouteWithAuth(deleteRideOffer, app))
 	e.GET("/rides", getAllRides)
 	e.GET("/rides/user", ProtectRouteWithAuth(getAllUsersRides, app))
-	e.GET("/rides/:id", ProtectRouteWithAuth(getRideByID, app))
+	e.GET("/rides/:id", getRideByID)
+	//e.POST("/rides/:id/", getRideByID)
 
 	// ride requests
 	e.POST("/ride/request/:id/new", ProtectRouteWithAuth(rides.CreateRideRequest, app)) // id is the ride id

@@ -14,8 +14,8 @@ type RideRequest struct {
 	User   auth.User
 	UserID string `json:"user_id" gorm:"foreignKey"`
 	Ride   RideOffer
-	RideID uint `json:"ride_id" gorm:"foreignKey"`
-	Status int  `json:"status"` // 0 -> none, -1 -> decline, +1 -> accept
+	RideID int `json:"ride_id" gorm:"foreignKey"`
+	Status int `json:"status"` // 0 -> none, -1 -> decline, +1 -> accept
 }
 
 func CreateRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
@@ -27,11 +27,10 @@ func CreateRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 
 	}
 	var request RideRequest
-	rideId, err := strconv.Atoi(c.Param("id"))
+	request.RideID, err = strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-	request.RideID = uint(rideId)
 	request.UserID = u.ID
 	request.Status = 0
 	res := tx.Create(&request)
@@ -71,7 +70,7 @@ func AcceptRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 func DeclineRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 	tx, err := storage.GetConnection()
 	defer storage.CloseConnection(tx)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
@@ -100,14 +99,14 @@ func DeleteRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 
 	var request RideRequest
 	RequestId, err := strconv.Atoi(c.Param("id"))
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
-	res:= tx.Where("id = ?",RequestId).Delete(&request)
+	res := tx.Where("id = ?", RequestId).Delete(&request)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	return c.JSON(204, map[string]string{ "message": "deleted ride request" })
+	return c.JSON(204, map[string]string{"message": "deleted ride request"})
 }
