@@ -2,6 +2,7 @@ package server
 
 import (
 	"rideshare/internal/auth"
+	"rideshare/internal/rides"
 
 	firebase "firebase.google.com/go/v4"
 	"github.com/labstack/echo/v4"
@@ -21,6 +22,12 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.GET("/rides", getAllRides)
 	e.GET("/rides/user", ProtectRouteWithAuth(getAllUsersRides, app))
 	e.GET("/rides/:id", ProtectRouteWithAuth(getRideByID, app))
+
+	// ride requests
+	e.POST("/ride/request/:id/new", ProtectRouteWithAuth(rides.CreateRideRequest, app)) // id is the ride id
+	e.POST("/ride/request/:id/accept", ProtectRouteWithAuth(rides.AcceptRideRequest, app)) // id is the request id
+	e.POST("/ride/request/:id/decline", ProtectRouteWithAuth(rides.DeclineRideRequest, app)) // same as above
+	e.POST("/ride/request/:id/delete", ProtectRouteWithAuth(rides.DeleteRideRequest, app)) // same as above
 
 	// profile stuff
 	e.POST("/user/create", func(c echo.Context) error {
