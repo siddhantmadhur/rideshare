@@ -20,8 +20,8 @@ import { PlaceObj } from './form'
 type Ride = {
     id: number
     user_id: string
-    pickup: string
-    dropoff: string
+    pickup: PlaceObj
+    dropoff: PlaceObj
     passengers?: string
     date?: string
     time?: string

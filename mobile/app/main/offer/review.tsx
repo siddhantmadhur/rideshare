@@ -28,8 +28,8 @@ export default function ReviewOffer() {
                     Authorization: `Bearer ${token}`, // Firebase Auth
                 },
                 body: JSON.stringify({
-                    pickup: ride.pickup,
-                    dropoff: ride.dropoff,
+                    pickup: JSON.stringify(ride.pickup),
+                    dropoff: JSON.stringify(ride.dropoff),
                     notes: ride.notes || '',
                     timestamp: toISOIfValid(ride.date, ride.time),
                     hasCar: ride.hasCar === true,

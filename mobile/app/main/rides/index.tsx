@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FlatList, Pressable, Text, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
+import { PlaceObj } from '../offer/form'
 
 export interface RideInfo {
     id: number
@@ -44,7 +45,7 @@ const Item = ({ item }: ItemProps) => {
                     marginBottom: 5,
                 }}
             >
-                {item.pickup} to {item.dropoff}
+                {(JSON.parse(item.pickup) as PlaceObj).title.split(",")[0]} to {(JSON.parse(item.dropoff) as PlaceObj).title.split(",")[0]}
             </Text>
             <Text>Driven by {item.display_name}</Text>
             <Text>{date.toUTCString()}</Text>

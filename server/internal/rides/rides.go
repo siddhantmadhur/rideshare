@@ -77,7 +77,7 @@ func GetAllRides() ([]UserRide, error) {
 		return nil, err
 	}
 	var rides []UserRide
-	err = tx.Table("ride_offers").Select("ride_offers.*, users.display_name").Joins("left join users on users.id = ride_offers.user_id").Scan(&rides).Error
+	err = tx.Table("ride_offers").Select("ride_offers.*, users.display_name").Where("ride_offers.deleted_at IS NULL").Joins("left join users on users.id = ride_offers.user_id").Scan(&rides).Error
 	return rides, err
 }
 
