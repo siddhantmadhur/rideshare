@@ -26,6 +26,7 @@ func main() {
 
 	tx.AutoMigrate(&auth.User{})
 	tx.AutoMigrate(&rides.RideOffer{})
+	tx.AutoMigrate(&rides.RideRequest{})
 
 	storage.CloseConnection(tx)
 

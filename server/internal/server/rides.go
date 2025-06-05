@@ -71,7 +71,14 @@ func deleteRideOffer(c echo.Context, u *auth.User, _ *firebase.App) error {
 	return c.NoContent(204)
 }
 
-func getAllRides(c echo.Context, u *auth.User, _ *firebase.App) error {
+func getAllUsersRides(c echo.Context, u *auth.User, _ *firebase.App) error {
+	r, err := rides.GetAllUserRides(u.ID)
+	if err != nil {
+		return c.JSON(500, map[string]string{"error": "could not get rides"})
+	}
+	return c.JSON(200, r)
+}
+func getAllRides(c echo.Context) error {
 	r, err := rides.GetAllRides()
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "could not get rides"})

@@ -10,7 +10,7 @@ import (
 
 type RideOffer struct {
 	gorm.Model
-	ID          uint      `json:"id"`
+	ID          int       `json:"id"`
 	Dropoff     string    `json:"dropoff" gorm:"not null"`
 	Timestamp   time.Time `json:"timestamp" gorm:"not null"`
 	Notes       string    `json:"notes"`
@@ -69,6 +69,17 @@ func GetAllRides() ([]RideOffer, error) {
 	var rides []RideOffer
 	err = tx.Find(&rides).Error
 	return rides, err
+}
+
+func GetAllUserRides(uid string) ([]RideOffer, error) {
+	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
+	if err != nil {
+		return nil, err
+	}
+	var rides []RideOffer
+	res := tx.Where("user_id = ?", uid).Find(&rides)
+	return rides, res.Error
 }
 
 func GetRideByID(id uint) (RideOffer, error) {
