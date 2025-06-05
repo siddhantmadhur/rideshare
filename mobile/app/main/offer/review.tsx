@@ -67,8 +67,8 @@ export default function ReviewOffer() {
             <Text style={styles.title}>Confirm your offer details</Text>
 
             <View style={styles.card}>
-                <Text>Pickup: {ride.pickup}</Text>
-                <Text>Dropoff: {ride.dropoff}</Text>
+                <Text>Pickup: {ride.pickup?.title}</Text>
+                <Text>Dropoff: {ride.dropoff?.title}</Text>
                 <Text>Passengers: {ride.passengers}</Text>
                 <Text>Has Car: {ride.hasCar}</Text>
                 {ride.hasCar === true && (

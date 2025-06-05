@@ -8,15 +8,20 @@ import (
 	"gorm.io/gorm"
 )
 
+type Location struct {
+	Id    string `json:"id"`
+	Title string `json:"title"`
+}
+
 type RideOffer struct {
 	gorm.Model
 	ID          int       `json:"id"`
-	Dropoff     string    `json:"dropoff" gorm:"not null"`
+	Dropoff     string    `json:"dropoff" gorm:"not null;type:json"`
+	Pickup      string    `json:"pickup" gorm:"not null;type:json"`
 	Timestamp   time.Time `json:"timestamp" gorm:"not null"`
 	Notes       string    `json:"notes"`
 	User        auth.User `json:"-"`
 	UserID      string    `json:"user_id" gorm:"not null"` // took out unique so a uid can have more than 1 ride
-	Pickup      string    `json:"pickup" gorm:"not null"`
 	HasCar      bool      `json:"has_car" gorm:"not null"`
 	SplitGas    bool      `json:"split_gas" gorm:"not null"`
 	SplitUber   bool      `json:"split_uber" gorm:"not null"`

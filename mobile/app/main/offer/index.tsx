@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import Constants from 'expo-constants'
 import {
     View,
@@ -9,12 +10,12 @@ import {
     Alert,
     Platform,
 } from 'react-native'
-import { useOffer } from '../../context/OfferContext'
 import { router } from 'expo-router'
 import { useState, useEffect, useCallback } from 'react'
 import auth from '@react-native-firebase/auth'
 import { useFocusEffect } from 'expo-router'
 import { SERVER_URL } from '@/lib/constants'
+import { PlaceObj } from './form'
 
 type Ride = {
     id: number
@@ -110,11 +111,11 @@ export default function OfferList() {
                         return (
                             <View style={styles.card}>
                                 <Text>
-                                    Pickup: {(item.pickup ?? 'N/A').toString()}
+                                    Pickup: {(JSON.parse(item.pickup ?? "{}").title ?? 'N/A').toString()}
                                 </Text>
                                 <Text>
                                     Dropoff:{' '}
-                                    {(item.dropoff ?? 'N/A').toString()}
+                                    {(JSON.parse(item.dropoff ?? "{}").title ?? 'N/A').toString()}
                                 </Text>
                                 <Text>
                                     Seats Available:{' '}

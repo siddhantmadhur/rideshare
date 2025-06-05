@@ -1,12 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
 
+interface Location {
+  title: string,
+  id: string,
+}
+
 export type RideDetails = {
   passengers?: string;
   hasCar?: boolean;
   splitGas?: boolean;
   splitUber?: boolean;
-  pickup?: string;
-  dropoff?: string;
+  pickup?: Location;
+  dropoff?: Location;
   carModel?: string;
   date?: string;
   time?: string;

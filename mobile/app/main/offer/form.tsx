@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 // --- app/offer/form.tsx ---
 import { Checkbox } from 'expo-checkbox'
 import {
@@ -10,12 +11,155 @@ import {
     Alert,
     Pressable,
     Platform,
+    Dimensions,
 } from 'react-native'
 import { useOffer } from '@/context/OfferContext'
 import { router } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { toISOIfValid, convertTo24Hour } from '@/app/utils/dateUtils'
+import { AutocompleteDropdown, IAutocompleteDropdownRef } from 'react-native-autocomplete-dropdown'
+import { useTheme } from 'react-native-paper'
+
+export interface PlaceObj {
+    title: string,
+    id: string
+}
+
+interface PlacesListType {
+    suggestions:     {
+        placePrediction: {
+            place: string,
+            placeId: string,
+            text: {
+                text: string,
+                matches: {
+                    endOffset: number
+                }[]
+            }
+        }
+    }[]
+}
+
+const fetchPlace = async (location: string) => {
+    const res = await fetch("https://places.googleapis.com/v1/places:autocomplete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": process.env.EXPO_PUBLIC_GOOGLE_API_KEY ?? "",
+        },
+        body: JSON.stringify({
+            "input": location 
+        })
+    })
+    if (res.ok) {
+        const data = await res.json()
+        return data as PlacesListType
+    } 
+    return null
+}
+
+
+const PlacesAutocompleteInputBox = (props: {
+    placeholder: string,
+    onChangeText: (name: string, id: string)=>void,
+}) => {
+    const [loading, setLoading] = useState(false)
+    const [suggestionsList, setSuggestionsList] = useState<PlaceObj[]>([])
+    const [selectedItem, setSelectedItem] = useState<string | null>(null)
+    const dropdownController = useRef<IAutocompleteDropdownRef | null>(null)
+  
+    const searchRef = useRef(null)
+  
+    const getSuggestions = useCallback(async (q: string) => {
+      const filterToken = q.toLowerCase()
+      if (typeof q !== 'string' || q.length < 3) {
+        setSuggestionsList([])
+        return
+      }
+      setLoading(true)
+      const response = await fetchPlace(q) 
+      console.log("called fetch")
+      if (response) {
+
+      const suggestions = response.suggestions.map((place, idx) => {
+        return {id: place.placePrediction.placeId, title: place.placePrediction.text.text} as PlaceObj
+      })
+      setSuggestionsList(suggestions)
+      }
+      setLoading(false)
+    }, [])
+  
+    const onClearPress = useCallback(() => {
+      setSuggestionsList([])
+    }, [])
+  
+    const onOpenSuggestionsList = useCallback((isOpened: boolean) => {}, [])
+ 
+    const theme = useTheme()
+
+    return (
+      <>
+        <View
+          style={[
+            { flex: 1, flexDirection: 'row', alignItems: 'center' },
+            Platform.select({ ios: { zIndex: 1 } }),
+          ]}>
+          <AutocompleteDropdown
+            ref={searchRef}
+            controller={controller => {
+              dropdownController.current = controller
+            }}
+            // initialValue={'1'}
+            direction={Platform.select({ ios: 'down' })}
+            dataSet={suggestionsList}
+            onChangeText={getSuggestions}
+            onSelectItem={item => {
+                if (item) {
+                    setSelectedItem(item.id)
+                    props.onChangeText(item.title ?? "", item.id)
+                }
+            }}
+            debounce={600}
+            suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
+            onClear={onClearPress}
+            //  onSubmit={(e) => onSubmitSearch(e.nativeEvent.text)}
+            onOpenSuggestionsList={onOpenSuggestionsList}
+            loading={loading}
+            useFilter={false} // set false to prevent rerender twice
+            textInputProps={{
+              placeholder: props.placeholder,
+              autoCorrect: false,
+              autoCapitalize: 'none',
+              style: {
+                color: theme.colors.onPrimaryContainer,
+                paddingLeft: 18,
+              },
+            }}
+            inputContainerStyle={{
+              backgroundColor: theme.colors.primaryContainer,
+              borderColor: theme.colors.primary,
+              borderRadius: 12,
+              borderWidth: 1,
+            }}
+            suggestionsListContainerStyle={{
+              backgroundColor: theme.colors.secondaryContainer,
+            }}
+            containerStyle={{ flexGrow: 1, flexShrink: 1 }}
+            renderItem={(item, text) => <Text style={{ color: theme.colors.onSecondaryContainer , padding: 15 }}>{item.title}</Text>}
+          //   ChevronIconComponent={<Feather name="chevron-down" size={20} color="#fff" />}
+          //   ClearIconComponent={<Feather name="x-circle" size={18} color="#fff" />}
+            inputHeight={50}
+            showChevron={false}
+            closeOnBlur={false}
+            //  showClear={false}
+          />
+        </View>
+      </>
+    )
+   
+}
+
 
 export default function OfferForm() {
     const { setRide, ride } = useOffer()
@@ -141,25 +285,8 @@ export default function OfferForm() {
                 </View>
             )}
 
-            <TextInput
-                placeholder="Pickup Location"
-                style={[styles.input, errors.pickup && styles.error]}
-                value={ride.pickup}
-                onChangeText={(text) => {
-                    setRide({ pickup: text })
-                    setErrors((e) => ({ ...e, pickup: false }))
-                }}
-            />
-
-            <TextInput
-                placeholder="Dropoff Location"
-                style={[styles.input, errors.dropoff && styles.error]}
-                value={ride.dropoff}
-                onChangeText={(text) => {
-                    setRide({ dropoff: text })
-                    setErrors((e) => ({ ...e, dropoff: false }))
-                }}
-            />
+            <PlacesAutocompleteInputBox onChangeText={(name, id)=>{setRide({pickup: {title: name, id: id}})}} placeholder='Pickup Location' />
+            <PlacesAutocompleteInputBox onChangeText={(name, id)=>{setRide({dropoff: {title: name, id: id}})}} placeholder='Dropoff Location' />
 
             <TextInput
                 placeholder="Car Model"

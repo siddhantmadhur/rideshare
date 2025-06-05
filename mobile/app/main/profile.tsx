@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { SERVER_URL } from '@/lib/constants'
 import { useAuthStore } from '@/lib/store'
 import auth, { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
