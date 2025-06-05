@@ -150,9 +150,61 @@ Edit name, contact info, and preferences.
 
 ---
 
-## 💬 Feature 7: Chat Feature
+## 🗺️ Feature 6A: Map View with Ride Markers
 
 **Description:**  
+Interactive Google Maps interface that displays available ride offers as location markers for easy geographical browsing.
+
+**How to Use:**  
+1. Navigate to the "Maps" tab in the bottom navigation.
+2. Browse the map to see available ride offers marked with location pins.
+3. View markers positioned at pickup locations across the map.
+
+**Expected Behavior:**  
+- Map displays with ride offer markers at pickup locations
+- Markers are clearly visible and positioned accurately
+- Users can browse rides geographically on the map
+
+**Screenshots:**  
+<img src="https://github.com/user-attachments/assets/7b5c8092-026f-4983-b441-a4649b2e2fcf" width="200" />
+<img src="https://github.com/user-attachments/assets/092fc8ba-35da-4a48-b1d1-183cd9a8ecf7" width="200" />
+
+---
+
+## ✅ Feature 6B: Ride Request Confirmation
+
+Detailed ride information component that appears when users interact with ride markers, displaying comprehensive trip and driver information.
+
+**How to Use:**  
+1. Tap on any marker on the map.
+2. Review the detailed ride information including:
+   - Driver name
+   - Vehicle information (model, color)
+   - Destination address
+   - Departure time
+   - Available seats
+   - Cost split amount
+3. Use the action buttons:
+   - **"Message [Driver Name]"** - Start a direct chat with the driver
+   - **"Message Carpool Group"** - Join the group chat for all riders
+   - **"Accept Ride"** - Send a ride request to the driver
+
+**Expected Behavior:**  
+- Detailed component appears when marker is tapped
+- All ride information is clearly displayed
+- Action buttons allow direct interaction with ride offers
+
+**Screenshot:**  
+<img src="https://github.com/user-attachments/assets/c131dea8-7616-4f4e-9161-d63bbc404232" width="200" />
+<img src="https://github.com/user-attachments/assets/9f22f0ec-41f2-4e64-9c81-508b070c6f2d" width="200" />
+
+--
+
+## 💬 Feature 7: Chat Feature
+
+
+**Description:**  
+
 Edit name, contact info, and preferences.
 
 **How to Use:**  
