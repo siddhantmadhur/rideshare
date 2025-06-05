@@ -166,8 +166,8 @@ Interactive Google Maps interface that displays available ride offers as locatio
 - Users can browse rides geographically on the map
 
 **Screenshots:**  
-<img src="https://github.com/user-attachments/assets/7b5c8092-026f-4983-b441-a4649b2e2fcf" width="200" />
 <img src="https://github.com/user-attachments/assets/092fc8ba-35da-4a48-b1d1-183cd9a8ecf7" width="200" />
+<img src="https://github.com/user-attachments/assets/7b5c8092-026f-4983-b441-a4649b2e2fcf" width="200" />
 
 ---
 
@@ -195,8 +195,8 @@ Detailed ride information component that appears when users interact with ride m
 - Action buttons allow direct interaction with ride offers
 
 **Screenshot:**  
-<img src="https://github.com/user-attachments/assets/c131dea8-7616-4f4e-9161-d63bbc404232" width="200" />
-<img src="https://github.com/user-attachments/assets/9f22f0ec-41f2-4e64-9c81-508b070c6f2d" width="200" />
+<img src="https://github.com/user-attachments/assets/a86d054e-78d7-406e-bcc7-2f414abebb95" width="200" />
+<img src="https://github.com/user-attachments/assets/a152dc06-e1b3-40d9-8426-089ada00d7c7" width="200" />
 
 --
 
