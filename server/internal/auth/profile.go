@@ -16,10 +16,8 @@ type User struct {
 	ID          string         `json:"id" gorm:"primaryKey"`
 	DisplayName string         `json:"display_name"`
 	Email       string         `json:"email" gorm:"unique"`
-	Country     string         `json:"country"`
 	Description string         `json:"description"`
 	Interests   pq.StringArray `json:"interests" gorm:"type:text[]"`
-	Hobbies     pq.StringArray `json:"Hobbies" gorm:"type:text[]"`
 	DateOfBirth time.Time      `json:"date_of_birth"`
 	Gender      string         `json:"gender"`
 	Pronouns    string         `json:"pronouns"`
@@ -65,9 +63,17 @@ func UpdateUserProfile(uid string, updatedProfile *User) (*User, error) {
 		return nil, err
 	}
 
-	if err := db.Model(&User{}).Where("id = ?", uid).Updates(updatedProfile).Error; err != nil {
+	if err := db.Model(&User{}).Where("id = ?", uid).Updates(map[string]interface{}{
+		"display_name":  updatedProfile.DisplayName,
+		"description":   updatedProfile.Description,
+		"interests":     updatedProfile.Interests,
+		"date_of_birth": updatedProfile.DateOfBirth,
+		"gender":        updatedProfile.Gender,
+		"pronouns":      updatedProfile.Pronouns,
+	}).Error; err != nil {
 		return nil, err
 	}
+
 	return GetUserProfile(uid)
 }
 

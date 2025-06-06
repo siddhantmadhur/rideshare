@@ -31,6 +31,7 @@ func CreateRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 	if err != nil {
 		return err
 	}
+	request.RideID = uint(rideId)
 	request.UserID = u.ID
 	request.Status = 0
 	res := tx.Create(&request)

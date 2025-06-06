@@ -181,16 +181,19 @@ export default function Index() {
             webClientId:
                 '679084923122-ao9urrt2mjta2rrhfc74i1k8dir628pa.apps.googleusercontent.com',
         })
-        const subscriber = auth().onAuthStateChanged(async (user) => {
-            if (user) {
+        const subscriber = auth().onAuthStateChanged(async (firebaseUser) => {
+            if (firebaseUser) {
                 const res = await fetch(`${SERVER_URL}/user/current`, {
                     headers: {
-                        Authorization: `Bearer ${await user.getIdToken(false)}`,
+                        Authorization: `Bearer ${await firebaseUser.getIdToken(false)}`,
                     },
                 })
-                setUser(user)
+                if (!user || user.uid !== firebaseUser.uid) {
+                    setUser(firebaseUser)
+                  }             
+                  
                 if (res.status === 404) {
-                    router.replace('/profile/edit')
+                    router.replace('/main/profile/create')
                 } else if (res.status === 401) {
                     auth().signOut()
                     router.reload()
@@ -205,7 +208,7 @@ export default function Index() {
         return null
     }
     if (user) {
-        return <Redirect href="/main/offer" />
+        return <Redirect href="/main/offer" /> // which is home tab
     }
 
     return (

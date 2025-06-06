@@ -34,7 +34,7 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.POST("/user/create", func(c echo.Context) error {
 		return auth.CreateProfileRoute(c, app)
 	})
-	e.POST("/user/update", ProtectRouteWithAuth(updateUserProfile, app))
+	e.PUT("/user/update", ProtectRouteWithAuth(updateUserProfile, app))
 	e.GET("/user/current", func(c echo.Context) error {
 		return auth.GetUserProfileRoute(c, app)
 	})

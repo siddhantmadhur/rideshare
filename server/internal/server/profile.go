@@ -1,17 +1,23 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"rideshare/internal/auth"
+	"time"
 
 	firebase "firebase.google.com/go/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/lib/pq"
 )
 
 type UserDTO struct {
-	DisplayName string   `json:"name"`
-	Description string   `json:"description"`
-	Hobbies     []string `json:"Hobbies"`
+	DisplayName string         `json:"display_name"`
+	Description string         `json:"description"`
+	Interests   pq.StringArray `json:"interests"`
+	DateOfBirth time.Time      `json:"date_of_birth"`
+	Gender      string         `json:"gender"`
+	Pronouns    string         `json:"pronouns"`
 }
 
 // Updates user's [rofile inforamtion
@@ -27,8 +33,12 @@ func updateUserProfile(c echo.Context, u *auth.User, _ *firebase.App) error {
 	updated := &auth.User{
 		DisplayName: userDTO.DisplayName,
 		Description: userDTO.Description,
-		Hobbies:     userDTO.Hobbies,
+		Interests:   userDTO.Interests,
+		DateOfBirth: userDTO.DateOfBirth,
+		Gender:      userDTO.Gender,
+		Pronouns:    userDTO.Pronouns,
 	}
+	fmt.Printf("Updating user with: %+v\n", updated)
 
 	// update the profile using auth.UpdateUserProfile
 	if _, err := auth.UpdateUserProfile(u.ID, updated); err != nil {

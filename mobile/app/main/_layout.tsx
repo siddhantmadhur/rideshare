@@ -1,88 +1,71 @@
-import { Redirect, Stack, useRouter } from 'expo-router'
+import { Slot, useRouter, usePathname } from 'expo-router'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
 import { BottomNavigation, Icon } from 'react-native-paper'
+import { View } from 'react-native'
 
-const Profile = () => {
-    return <Text>Profile</Text>
+type RouteKey = 'offer' | 'rides' | 'search' | 'profile'
+
+const routeMap: Record<RouteKey, `/main/${RouteKey}`> = {
+  offer: '/main/offer',
+  rides: '/main/rides',
+  search: '/main/search',
+  profile: '/main/profile',
 }
 
-function Main() {
-    const [index, setIndex] = useState(0)
+const routes = [
+  {
+    key: 'offer',
+    title: 'Home',
+    focusedIcon: 'home-variant',
+    unfocusedIcon: 'home-variant-outline',
+  },
+  {
+    key: 'rides',
+    title: 'Rides',
+    focusedIcon: 'car-back',
+    unfocusedIcon: 'car-back',
+  },
+  {
+    key: 'search',
+    title: 'Search',
+    focusedIcon: 'magnify',
+    unfocusedIcon: 'magnify',
+  },
+  {
+    key: 'profile',
+    title: 'Profile',
+    focusedIcon: 'account-circle',
+    unfocusedIcon: 'account-circle-outline',
+  },
+]
 
-    const [routes] = useState([
-        {
-            key: 'offer',
-            title: 'Home',
-            focusedIcon: 'home-variant',
-            unfocusedIcon: 'home-variant-outline',
-        },
-        {
-            key: 'rides',
-            title: 'Rides',
-            focusedIcon: 'car-back',
-            unfocusedIcon: 'car-back',
-        },
-        {
-            key: 'chat',
-            title: 'Chat',
-            focusedIcon: 'chat',
-            unfocusedIcon: 'chat-outline',
-        },
-        {
-            key: 'profile',
-            title: 'Profile',
-            focusedIcon: 'account-circle',
-            unfocusedIcon: 'account-circle-outline',
-        },
-    ])
+export default function MainLayout() {
+  const [index, setIndex] = useState(0)
+  const router = useRouter()
+  const pathname = usePathname()
 
-    const renderScene = BottomNavigation.SceneMap({
-        profile: Profile,
-        rides: Profile,
-        search: Profile,
-        home: Profile,
-    })
+  const isTabRoute = routes.some((r) => pathname === routeMap[r.key as RouteKey])
 
-    const router = useRouter()
+  return (
+    <View style={{ flex: 1 }}>
+      <Slot /> {/* renders the current screen inside main/ */}
 
-    return (
-        <>
-            <Stack
-                screenOptions={{
-                    headerShown: true,
-                }}
-            >
-                <Stack.Screen
-                    name="profile"
-                    options={{ headerTitle: 'Profile' }}
-                />
-                <Stack.Screen name="offer" options={{ headerShown: false }} />
-                <Stack.Screen name="rides/index" options={{ headerTitle: 'Rides' }} />
-                <Stack.Screen name="rides/detailed" options={{ headerTitle: '' }} />
-            </Stack>
-            <BottomNavigation.Bar
-                navigationState={{ index, routes }}
-                onTabPress={({ route }) => {
-                    const newIndex = routes.findIndex(
-                        (r) => r.key === route.key
-                    )
-                    if (newIndex !== -1) {
-                        setIndex(newIndex)
-                    }
-                    router.replace(`/main/${route.key}`)
-                }}
-                renderIcon={({ route, color }) => {
-                    const idx = routes.findIndex((r) => r.key === route.key)
-
-                    return (
-                        <Icon source={ idx === index ? route.focusedIcon : route.unfocusedIcon} size={24} color={color} />
-                    )
-                }}
-                getLabelText={({ route }) => route.title}
-            />
-        </>
-    )
+      {isTabRoute && (
+        <BottomNavigation.Bar
+          navigationState={{ index, routes }}
+          onTabPress={({ route }) => {
+            const newIndex = routes.findIndex((r) => r.key === route.key)
+            if (newIndex !== -1) {
+              setIndex(newIndex)
+              router.replace(routeMap[route.key as RouteKey])
+            }
+          }}
+          renderIcon={({ route, color }) => (
+            <Icon source={route.focusedIcon} size={24} color={color} />
+          )}
+          getLabelText={({ route }) => route.title}
+        />
+      )}
+    </View>
+  )
 }
-
-export default Main
