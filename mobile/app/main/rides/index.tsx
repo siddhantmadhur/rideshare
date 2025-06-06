@@ -8,11 +8,20 @@ import { PlaceObj } from '../offer/form'
 
 export interface RideInfo {
     id: number
-    display_name: string
+    display_name?: string
     pickup: string
     dropoff: string
-    passengers: number
+    passengers: string | number
     timestamp: string
+    notes: string
+    user_id: string
+    has_car: boolean
+    split_gas: boolean
+    split_uber: boolean
+    date: string
+    time: string
+    car_model: string
+    environment: string
 }
 
 type ItemProps = {
@@ -49,6 +58,16 @@ const Item = ({ item }: ItemProps) => {
             </Text>
             <Text>Driven by {item.display_name}</Text>
             <Text>{date.toUTCString()}</Text>
+            <Text
+                style={{
+                    fontSize: 12,
+                    color: theme.colors.primary,
+                    marginTop: 5,
+                    fontStyle: 'italic',
+                }}
+            >
+                Tap to view route →
+            </Text>
         </Pressable>
     )
 }

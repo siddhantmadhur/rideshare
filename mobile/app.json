@@ -13,8 +13,8 @@
       "bundleIdentifier": "com.siddhantmadhur.rideshareapp",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
-        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
-      },
+        "googleMapsApiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -24,8 +24,8 @@
         "backgroundColor": "#ffffff"
       },
       "config": {
-        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
-      },
+        "googleMapsApiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+      }
     },
     "web": {
       "bundler": "metro",

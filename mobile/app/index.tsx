@@ -183,20 +183,40 @@ export default function Index() {
         })
         const subscriber = auth().onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
-                const res = await fetch(`${SERVER_URL}/user/current`, {
-                    headers: {
-                        Authorization: `Bearer ${await firebaseUser.getIdToken(false)}`,
-                    },
-                })
                 if (!user || user.uid !== firebaseUser.uid) {
                     setUser(firebaseUser)
-                  }             
-                  
-                if (res.status === 404) {
-                    router.replace('/main/profile/create')
-                } else if (res.status === 401) {
-                    auth().signOut()
-                    router.reload()
+                }
+                
+                try {
+                    // Wait for the user to be fully authenticated
+                    if (firebaseUser.emailVerified !== undefined) {
+                        const token = await firebaseUser.getIdToken(false)
+                        
+                        const res = await fetch(`${SERVER_URL}/user/current`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        })
+                        
+                        if (res.status === 404) {
+                            router.replace('/main/profile/create')
+                        } else if (res.status === 401) {
+                            auth().signOut()
+                            router.reload()
+                        } else if (res.ok) {
+                            // Profile exists, continue to main app
+                            router.replace('/main/offer')
+                        }
+                    }
+                } catch (error: any) {
+                    console.error('Fetch error:', error)
+                    // If there's an auth error, user might not be fully signed in yet
+                    if (error?.code === 'auth/no-current-user') {
+                        console.log('User not fully authenticated yet, waiting...')
+                        return
+                    }
+                    // For other errors, let them try to continue
+                    router.replace('/main/offer')
                 }
             }
             if (initializing) setInitializing(false)

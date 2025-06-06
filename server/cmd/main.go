@@ -10,6 +10,7 @@ import (
 	"rideshare/internal/storage"
 
 	firebase "firebase.google.com/go/v4"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"google.golang.org/api/option"
@@ -17,6 +18,11 @@ import (
 
 func main() {
 	fmt.Println("rideshare")
+
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found or error loading .env file")
+	}
 
 	// Migrate models
 	tx, err := storage.GetConnection()
@@ -33,6 +39,9 @@ func main() {
 	opt := option.WithCredentialsFile("service-account.json")
 	// setup firebase
 	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		log.Fatalf("Error initializing Firebase app: %v\n", err)
+	}
 
 	e := echo.New()
 	e.Use(middleware.CORS())
