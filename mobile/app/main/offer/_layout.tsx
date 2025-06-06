@@ -27,6 +27,10 @@ export default function OfferLayout() {
                         name="edit"
                         options={{ headerTitle: 'Edit Offer' }}
                     />
+                    <Stack.Screen
+                        name="manage_requests"
+                        options={{ headerTitle: '' }}
+                    />
                 </Stack>
             </OfferProvider>
         </AutocompleteDropdownContextProvider>

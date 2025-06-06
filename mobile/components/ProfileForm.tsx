@@ -76,7 +76,7 @@ export default function ProfileForm({ initialValues, onSubmit, mode }: Props) {
   
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+    <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <View style={styles.container}>
           <Text variant="titleLarge">{mode === 'edit' ? 'Edit Profile' : 'Create Profile'}</Text>
@@ -206,7 +206,7 @@ export default function ProfileForm({ initialValues, onSubmit, mode }: Props) {
           </Button>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   )
 }
 

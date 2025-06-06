@@ -16,6 +16,7 @@ import auth from '@react-native-firebase/auth'
 import { useFocusEffect } from 'expo-router'
 import { SERVER_URL } from '@/lib/constants'
 import { PlaceObj } from './form'
+import { Pressable } from 'react-native'
 
 type Ride = {
     id: number
@@ -109,7 +110,9 @@ export default function OfferList() {
                         const isOwner = item.user_id === currentUserId
 
                         return (
-                            <View style={styles.card}>
+                            <Pressable onPress={()=>{
+                                router.push(`/main/offer/manage_requests?ride_id=${item.id}`)
+                            }} style={styles.card}>
                                 <Text>
                                     Pickup: {(JSON.parse(item.pickup ?? "{}").title ?? 'N/A').toString()}
                                 </Text>
@@ -188,7 +191,7 @@ export default function OfferList() {
                                         </TouchableOpacity>
                                     </>
                                 ) : null}
-                            </View>
+                            </Pressable>
                         )
                     }}
                     ListEmptyComponent={<Text>No offers yet.</Text>}

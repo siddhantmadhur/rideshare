@@ -25,10 +25,11 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	//e.POST("/rides/:id/", getRideByID)
 
 	// ride requests
-	e.POST("/ride/request/:id/new", ProtectRouteWithAuth(rides.CreateRideRequest, app)) // id is the ride id
-	e.POST("/ride/request/:id/accept", ProtectRouteWithAuth(rides.AcceptRideRequest, app)) // id is the request id
-	e.POST("/ride/request/:id/decline", ProtectRouteWithAuth(rides.DeclineRideRequest, app)) // same as above
-	e.POST("/ride/request/:id/delete", ProtectRouteWithAuth(rides.DeleteRideRequest, app)) // same as above
+	e.POST("/ride/request/:id/new", ProtectRouteWithAuth(rides.CreateRideRequest, app))                       // id is the ride id
+	e.POST("/ride/request/:ride_id/accept/:request_id", ProtectRouteWithAuth(rides.AcceptRideRequest, app))   // id is the request id
+	e.POST("/ride/request/:ride_id/decline/:request_id", ProtectRouteWithAuth(rides.DeclineRideRequest, app)) // same as above
+	e.POST("/ride/request/:id/delete", ProtectRouteWithAuth(rides.DeleteRideRequest, app))                    // same as above
+	e.GET("/ride/request/:id/pending", ProtectRouteWithAuth(rides.GetAllRideRequest, app))                    // same as above
 
 	// profile stuff
 	e.POST("/user/create", func(c echo.Context) error {

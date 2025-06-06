@@ -18,6 +18,36 @@ type RideRequest struct {
 	Status int `json:"status"` // 0 -> none, -1 -> decline, +1 -> accept
 }
 
+// -> GET /rides/requests/:id/pending
+func GetAllRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
+	rideId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
+
+	query := `select ride_requests.*, users.display_name, users.description, ride_requests.id as request_id from ride_requests
+		inner join ride_offers
+		on ride_offers.id = ride_requests.ride_id
+		left join users
+		on ride_requests.user_id = users.id
+		where ride_id = ? AND ride_offers.user_id = ?;`
+
+	var request []struct {
+		DisplayName string `json:"display_name"`
+		Description string `json:"description"`
+		UserID      string `json:"user_id"`
+		Status      int    `json:"status"`
+		RequestId   int    `json:"request_id"`
+	}
+	err = tx.Raw(query, rideId, u.ID).Scan(&request).Error
+	if err != nil {
+		return err
+	}
+	return c.JSON(200, request)
+}
+
 func CreateRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 	tx, err := storage.GetConnection()
 	defer storage.CloseConnection(tx)
@@ -51,17 +81,30 @@ func AcceptRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 		return err
 	}
 
-	var request RideRequest
-	RequestId, err := strconv.Atoi(c.Param("id"))
+	rideId, err := strconv.Atoi(c.Param("ride_id"))
+	if err != nil {
+		return err
+	}
+	requestId, err := strconv.Atoi(c.Param("request_id"))
 	if err != nil {
 		return err
 	}
 
-	res := tx.Model(&request).Where("id = ?", RequestId).Update("status", 1)
-	if res.Error != nil {
-		return res.Error
-	}
+	query := `with t as (
+			select ride_requests.id as request_id, ride_offers.id as offer_id, ride_offers.user_id as owner_id
+			from ride_requests
+			inner join ride_offers
+			on ride_requests.ride_id = ride_offers.id
+		)
+		update ride_requests
+		set status = 1
+		from t
+		where id = ? and offer_id = ? and owner_id = ?;`
 
+	err = tx.Exec(query, requestId, rideId, u.ID).Error
+	if err != nil {
+		return err
+	}
 	return c.JSON(200, map[string]string{
 		"message": "accepted ride request!",
 	})
@@ -74,19 +117,32 @@ func DeclineRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 		return err
 	}
 
-	var request RideRequest
-	RequestId, err := strconv.Atoi(c.Param("id"))
+	rideId, err := strconv.Atoi(c.Param("ride_id"))
+	if err != nil {
+		return err
+	}
+	requestId, err := strconv.Atoi(c.Param("request_id"))
 	if err != nil {
 		return err
 	}
 
-	res := tx.Model(&request).Where("id = ?", RequestId).Update("status", -1)
-	if res.Error != nil {
-		return res.Error
-	}
+	query := `with t as (
+			select ride_requests.id as request_id, ride_offers.id as offer_id, ride_offers.user_id as owner_id
+			from ride_requests
+			inner join ride_offers
+			on ride_requests.ride_id = ride_offers.id
+		)
+		update ride_requests
+		set status = -1
+		from t
+		where id = ? and offer_id = ? and owner_id = ?;`
 
+	err = tx.Exec(query, requestId, rideId, u.ID).Error
+	if err != nil {
+		return err
+	}
 	return c.JSON(200, map[string]string{
-		"message": "declined ride request!",
+		"message": "accepted ride request!",
 	})
 }
 
