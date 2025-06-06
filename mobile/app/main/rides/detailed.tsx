@@ -1,11 +1,11 @@
 /* eslint-disable import/no-unresolved */
 import { useSearchParams } from 'expo-router/build/hooks'
 import { useEffect, useState } from 'react'
-import { View, Text, Dimensions, ScrollView, StyleSheet, Animated } from 'react-native'
+import { View, Text, Dimensions, ScrollView, StyleSheet, Animated, Platform } from 'react-native'
 import { RideInfo } from '.'
 import { ProgressBar, Card, Title, Paragraph, useTheme, Button } from 'react-native-paper'
 import { SERVER_URL } from '@/lib/constants'
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps'
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
 
 interface RouteCoordinate {
@@ -69,7 +69,7 @@ const DetailedRideInformation = () => {
     })
 
     const fetchRouteData = async (pickupPlaceId: string, dropoffPlaceId: string) => {
-        const GOOGLE_API_KEY = "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+        const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY ?? ""
         
         try {
             // Get coordinates for pickup and dropoff locations
@@ -242,7 +242,7 @@ const DetailedRideInformation = () => {
         <GestureHandlerRootView style={styles.container}>
             {pickupCoords && dropoffCoords && (
                 <MapView
-                    provider={PROVIDER_GOOGLE}
+                    provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     style={styles.fullScreenMap}
                     initialRegion={{
                         latitude: (pickupCoords.latitude + dropoffCoords.latitude) / 2,

@@ -13,7 +13,7 @@
       "bundleIdentifier": "com.siddhantmadhur.rideshareapp",
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
-        "googleMapsApiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
       }
     },
     "android": {
@@ -24,7 +24,7 @@
         "backgroundColor": "#ffffff"
       },
       "config": {
-        "googleMapsApiKey": "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk"
+        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
       }
     },
     "web": {
