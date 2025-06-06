@@ -18,7 +18,7 @@ import { router } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useCallback, useRef, useState } from 'react'
 import { toISOIfValid, convertTo24Hour } from '@/app/utils/dateUtils'
-import { FlatList } from 'react-native'
+import { AutocompleteDropdown, IAutocompleteDropdownRef } from 'react-native-autocomplete-dropdown'
 import { useTheme } from 'react-native-paper'
 
 export interface PlaceObj {
@@ -42,39 +42,20 @@ interface PlacesListType {
 }
 
 const fetchPlace = async (location: string) => {
-    const GOOGLE_API_KEY = "AIzaSyDDo5-qCptGQBi5S5wGpxkm8obGoPZLmLk" // Your API key
-    
-    console.log('Making API call for:', location)
-    
-    // Using the correct Google Places Autocomplete API endpoint
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(location)}&key=${GOOGLE_API_KEY}`
-    
-    const res = await fetch(url, {
-        method: "GET",
+    const res = await fetch("https://places.googleapis.com/v1/places:autocomplete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": process.env.EXPO_PUBLIC_GOOGLE_API_KEY ?? "",
+        },
+        body: JSON.stringify({
+            "input": location 
+        })
     })
-    
-    console.log('API response status:', res.status)
     if (res.ok) {
         const data = await res.json()
-        console.log('API response data:', data)
-        
-        // Convert to our expected format
-        if (data.predictions) {
-            return {
-                suggestions: data.predictions.map((prediction: any) => ({
-                    placePrediction: {
-                        placeId: prediction.place_id,
-                        text: {
-                            text: prediction.description
-                        }
-                    }
-                }))
-            } as PlacesListType
-        }
-    } else {
-        const errorText = await res.text()
-        console.error('API error:', errorText)
-    }
+        return data as PlacesListType
+    } 
     return null
 }
 
@@ -85,125 +66,98 @@ const PlacesAutocompleteInputBox = (props: {
 }) => {
     const [loading, setLoading] = useState(false)
     const [suggestionsList, setSuggestionsList] = useState<PlaceObj[]>([])
-    const [inputValue, setInputValue] = useState('')
-    const [showSuggestions, setShowSuggestions] = useState(false)
-    const theme = useTheme()
+    const [selectedItem, setSelectedItem] = useState<string | null>(null)
+    const dropdownController = useRef<IAutocompleteDropdownRef | null>(null)
+  
+    const searchRef = useRef(null)
   
     const getSuggestions = useCallback(async (q: string) => {
-      console.log('getSuggestions called with:', q)
+      const filterToken = q.toLowerCase()
       if (typeof q !== 'string' || q.length < 3) {
         setSuggestionsList([])
-        setShowSuggestions(false)
         return
       }
       setLoading(true)
-      try {
-        const response = await fetchPlace(q) 
-        console.log("Fetch response:", response)
-        if (response && response.suggestions) {
-          const suggestions = response.suggestions.map((place) => {
-            return {id: place.placePrediction.placeId, title: place.placePrediction.text.text} as PlaceObj
-          })
-          console.log('Setting suggestions:', suggestions)
-          setSuggestionsList(suggestions)
-          setShowSuggestions(true)
-        } else {
-          console.log('No suggestions found')
-          setSuggestionsList([])
-          setShowSuggestions(false)
-        }
-      } catch (error) {
-        console.error('Error fetching places:', error)
-        setSuggestionsList([])
-        setShowSuggestions(false)
+      const response = await fetchPlace(q) 
+      console.log("called fetch")
+      if (response) {
+
+      const suggestions = response.suggestions.map((place, idx) => {
+        return {id: place.placePrediction.placeId, title: place.placePrediction.text.text} as PlaceObj
+      })
+      setSuggestionsList(suggestions)
       }
       setLoading(false)
     }, [])
-
-    const handleInputChange = (text: string) => {
-      setInputValue(text)
-      getSuggestions(text)
-    }
-
-    const handleSelectPlace = (item: PlaceObj) => {
-      setInputValue(item.title)
-      setShowSuggestions(false)
-      props.onChangeText(item.title, item.id)
-    }
-
-    const handleManualEntry = () => {
-      // Allow manual entry if API fails - generate a temporary ID
-      if (inputValue.length > 0 && suggestionsList.length === 0) {
-        const tempId = `manual_${Date.now()}`
-        props.onChangeText(inputValue, tempId)
-        console.log('Manual entry:', inputValue, tempId)
-      }
-    }
+  
+    const onClearPress = useCallback(() => {
+      setSuggestionsList([])
+    }, [])
+  
+    const onOpenSuggestionsList = useCallback((isOpened: boolean) => {}, [])
+ 
+    const theme = useTheme()
 
     return (
-      <View style={{ flex: 1, zIndex: 1000 }}>
-        <TextInput
-          placeholder={props.placeholder}
-          value={inputValue}
-          onChangeText={handleInputChange}
-          onBlur={handleManualEntry}
-          autoCorrect={false}
-          autoCapitalize='none'
+      <>
+        <View
           style={[
-            styles.input,
-            {
+            { flex: 1, flexDirection: 'row', alignItems: 'center' },
+            Platform.select({ ios: { zIndex: 1 } }),
+          ]}>
+          <AutocompleteDropdown
+            ref={searchRef}
+            controller={controller => {
+              dropdownController.current = controller
+            }}
+            // initialValue={'1'}
+            direction={Platform.select({ ios: 'down' })}
+            dataSet={suggestionsList}
+            onChangeText={getSuggestions}
+            onSelectItem={item => {
+                if (item) {
+                    setSelectedItem(item.id)
+                    props.onChangeText(item.title ?? "", item.id)
+                }
+            }}
+            debounce={600}
+            suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
+            onClear={onClearPress}
+            //  onSubmit={(e) => onSubmitSearch(e.nativeEvent.text)}
+            onOpenSuggestionsList={onOpenSuggestionsList}
+            loading={loading}
+            useFilter={false} // set false to prevent rerender twice
+            textInputProps={{
+              placeholder: props.placeholder,
+              autoCorrect: false,
+              autoCapitalize: 'none',
+              style: {
+                color: theme.colors.onPrimaryContainer,
+                paddingLeft: 18,
+              },
+            }}
+            inputContainerStyle={{
               backgroundColor: theme.colors.primaryContainer,
               borderColor: theme.colors.primary,
-              color: theme.colors.onPrimaryContainer,
-            }
-          ]}
-        />
-        {showSuggestions && suggestionsList.length > 0 && (
-          <View style={{
-            position: 'absolute',
-            top: 50, // Position below the input
-            left: 0,
-            right: 0,
-            maxHeight: 200,
-            backgroundColor: theme.colors.secondaryContainer,
-            borderWidth: 1,
-            borderColor: theme.colors.primary,
-            borderRadius: 8,
-            elevation: 5, // Android shadow
-            shadowColor: '#000', // iOS shadow
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            zIndex: 1000,
-          }}>
-            <FlatList
-              data={suggestionsList}
-              keyExtractor={(item) => item.id}
-              nestedScrollEnabled={true}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => handleSelectPlace(item)}
-                  style={{
-                    padding: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme.colors.outline,
-                  }}
-                >
-                  <Text style={{ color: theme.colors.onSecondaryContainer }}>
-                    {item.title}
-                  </Text>
-                </Pressable>
-              )}
-            />
-          </View>
-        )}
-        {loading && (
-          <Text style={{ marginTop: 5, color: theme.colors.onSurfaceVariant }}>
-            Loading suggestions...
-          </Text>
-        )}
-      </View>
+              borderRadius: 12,
+              borderWidth: 1,
+            }}
+            suggestionsListContainerStyle={{
+              backgroundColor: theme.colors.secondaryContainer,
+            }}
+            containerStyle={{ flexGrow: 1, flexShrink: 1 }}
+            renderItem={(item, text) => <Text style={{ color: theme.colors.onSecondaryContainer , padding: 15 }}>{item.title}</Text>}
+          //   ChevronIconComponent={<Feather name="chevron-down" size={20} color="#fff" />}
+          //   ClearIconComponent={<Feather name="x-circle" size={18} color="#fff" />}
+            inputHeight={50}
+            showChevron={false}
+            closeOnBlur={false}
+            //  showClear={false}
+          />
+        </View>
+      </>
     )
+   
 }
 
 
