@@ -39,3 +39,4 @@ yarn-error.*
 **/service-account.json
 app-example
 server/service-account.json
+.env
