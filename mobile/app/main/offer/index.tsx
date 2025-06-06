@@ -123,7 +123,7 @@ export default function OfferList() {
                                 <Text>
                                     Seats Available:{' '}
                                     {(item.passengers ?? 'N/A').toString()}
-                                </Text>{' '}
+                                </Text>
                                 {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
                                 <Text>
                                     Date: {(item.date ?? 'N/A').toString()}
@@ -139,16 +139,13 @@ export default function OfferList() {
                                             ? 'Yes'
                                             : 'No'}
                                     </Text>
-                                ) : null}
-                                {item.has_car === false ? (
-                                    <Text>
+                                ) :( <Text>
                                         Willing to Split Uber:{' '}
                                         {item.willing_to_split_uber
                                             ? 'Yes'
                                             : 'No'}
-                                    </Text>
-                                ) : null}
-                                {isOwner && item.id ? (
+                                    </Text>)}
+                                {(isOwner && item.id) ? (
                                     <>
                                         <TouchableOpacity
                                             style={{
