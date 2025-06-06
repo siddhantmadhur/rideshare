@@ -1,4 +1,4 @@
-import { Slot, useRouter, usePathname } from 'expo-router'
+import { Slot, useRouter, usePathname, Stack } from 'expo-router'
 import { useState } from 'react'
 import { BottomNavigation, Icon } from 'react-native-paper'
 import { View } from 'react-native'
@@ -47,7 +47,7 @@ export default function MainLayout() {
   const isTabRoute = routes.some((r) => pathname === routeMap[r.key as RouteKey])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <Slot /> {/* renders the current screen inside main/ */}
 
       {isTabRoute && (
