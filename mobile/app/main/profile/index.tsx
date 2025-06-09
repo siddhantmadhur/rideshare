@@ -58,7 +58,7 @@ export default function ProfileViewScreen() { // j for viewing profile on profil
         ))}
       </View>
 
-      <Button mode="outlined" onPress={() => router.push('/main/profile/edit')} style={styles.button}>
+      <Button mode="outlined" onPress={() => router.push('/main/profile/edit')} style={styles.button}> {/* which is home tab */}
         Edit Profile
       </Button>
     </ScrollView>

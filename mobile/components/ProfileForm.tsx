@@ -164,7 +164,7 @@ export default function ProfileForm({ initialValues, onSubmit, mode }: Props) {
           />
 
           <TextInput
-            label="Add Interest"
+            label="Add Interests (hit Enter for each)"
             value={newInterest}
             onChangeText={setNewInterest}
             onSubmitEditing={() => {

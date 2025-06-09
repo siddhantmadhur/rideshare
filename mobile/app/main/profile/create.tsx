@@ -23,7 +23,7 @@ export default function CreateProfileScreen() {
       })
 
       if (res.ok) {
-        router.replace('/main/profile')
+        router.replace('/main/offer')
       } else {
         Alert.alert('Error', 'Failed to create profile')
       }

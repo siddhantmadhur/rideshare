@@ -2,13 +2,13 @@
 import Constants from 'expo-constants'
 import {
     View,
-    Text,
     FlatList,
     TouchableOpacity,
     StyleSheet,
     ActivityIndicator,
     Alert,
     Platform,
+    Pressable,
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState, useEffect, useCallback } from 'react'
@@ -16,7 +16,8 @@ import auth from '@react-native-firebase/auth'
 import { useFocusEffect } from 'expo-router'
 import { SERVER_URL } from '@/lib/constants'
 import { PlaceObj } from './form'
-import { Pressable } from 'react-native'
+import { Card, Text, Button, Divider } from 'react-native-paper'
+
 
 type Ride = {
     id: number
@@ -110,85 +111,70 @@ export default function OfferList() {
                         const isOwner = item.user_id === currentUserId
 
                         return (
-                            <Pressable onPress={()=>{
-                                router.push(`/main/offer/manage_requests?ride_id=${item.id}`)
-                            }} style={styles.card}>
-                                <Text>
-                                    Pickup: {(JSON.parse(item.pickup ?? "{}").title ?? 'N/A').toString()}
-                                </Text>
-                                <Text>
-                                    Dropoff:{' '}
-                                    {(JSON.parse(item.dropoff ?? "{}").title ?? 'N/A').toString()}
-                                </Text>
-                                <Text>
-                                    Seats Available:{' '}
-                                    {(item.passengers ?? 'N/A').toString()}
-                                </Text>
-                                {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
-                                <Text>
-                                    Date: {(item.date ?? 'N/A').toString()}
-                                </Text>
-                                <Text>Time: {item.time}</Text>
-                                <Text>
-                                    Has Car: {item.has_car ? 'Yes' : 'No'}
-                                </Text>
-                                {item.has_car ? (
+                            <Card style={styles.card} onPress={() => router.push(`/main/offer/manage_requests?ride_id=${item.id}`)}>
+                                <Card.Content>
+                                <Text variant="titleMedium">
+  {(() => {
+    try {
+      const pickup = typeof item.pickup === 'string' ? JSON.parse(item.pickup) : item.pickup
+      const dropoff = typeof item.dropoff === 'string' ? JSON.parse(item.dropoff) : item.dropoff
+
+      const extractPlaceAndCity = (fullTitle: string) => {
+        const parts = fullTitle.split(',').map(s => s.trim())
+        return parts.length >= 2 ? `${parts[0]}, ${parts[1]}` : fullTitle
+      }
+
+      return `${extractPlaceAndCity(pickup?.title)} → ${extractPlaceAndCity(dropoff?.title)}`
+    } catch {
+      return 'N/A → N/A'
+    }
+  })()}
+</Text>
+
+
+
+
+                                {/* we should j change backend to store objects so we dont hafta do this workaround */}
+
+
+                                    <Divider style={{ marginVertical: 6 }} />
+
                                     <Text>
-                                        Willing to Split Gas:{' '}
-                                        {item.willing_to_split_gas
-                                            ? 'Yes'
-                                            : 'No'}
+                                    Date: {item.date ? new Date(item.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'N/A'}
+                                    {' | '}
+                                    Time: {item.time || 'N/A'}
                                     </Text>
-                                ) :( <Text>
-                                        Willing to Split Uber:{' '}
-                                        {item.willing_to_split_uber
-                                            ? 'Yes'
-                                            : 'No'}
-                                    </Text>)}
-                                {(isOwner && item.id) ? (
-                                    <>
-                                        <TouchableOpacity
-                                            style={{
-                                                marginTop: 8,
-                                                backgroundColor: '#007aff',
-                                                padding: 8,
-                                                borderRadius: 5,
-                                            }}
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname:
-                                                        '/main/offer/edit',
-                                                    params: {
-                                                        id: item.id.toString(),
-                                                    },
-                                                })
-                                            }
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    textAlign: 'center',
-                                                }}
+                                    <Text>Seats: {item.passengers || 'N/A'}</Text>
+                                    {/* to do: logic for ppl accepting/ leaving rides --> seats decr/incr */}
+
+                                    <Text>Has Car: {item.has_car ? 'Yes' : 'No'}</Text>
+                                    {item.has_car ? (
+                                        <Text>Split Gas: {item.willing_to_split_gas ? 'Yes' : 'No'}</Text>
+                                    ) : (
+                                        <Text>Split Uber: {item.willing_to_split_uber ? 'Yes' : 'No'}</Text>
+                                    )}
+
+                                    {isOwner && (
+                                        <View style={styles.buttonRow}>
+                                            <Button
+                                                mode="contained"
+                                                style={styles.editButton}
+                                                onPress={() => router.push({ pathname: '/main/offer/edit', params: { id: item.id.toString() } })}
                                             >
                                                 Edit
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={[
-                                                styles.button,
-                                                { marginTop: 6 },
-                                            ]}
-                                            onPress={() =>
-                                                confirmDelete(item.id)
-                                            }
-                                        >
-                                            <Text style={styles.buttonText}>
+                                            </Button>
+                                            <Button
+                                                mode="contained"
+                                                buttonColor="#D21F3C"
+                                                style={styles.deleteButton}
+                                                onPress={() => confirmDelete(item.id)}
+                                            >
                                                 Delete
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </>
-                                ) : null}
-                            </Pressable>
+                                            </Button>
+                                        </View>
+                                    )}
+                                </Card.Content>
+                            </Card>
                         )
                     }}
                     ListEmptyComponent={<Text>No offers yet.</Text>}
@@ -209,10 +195,21 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: '#fff' },
     title: { fontSize: 22, fontWeight: '600', marginBottom: 20 },
     card: {
-        backgroundColor: '#eee',
-        padding: 16,
-        borderRadius: 10,
         marginBottom: 12,
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 12,
+        gap: 10,
+    },
+    editButton: {
+        flex: 1,
+        borderRadius: 6,
+    },
+    deleteButton: {
+        flex: 1,
+        borderRadius: 6,
     },
     addButton: {
         position: 'absolute',
@@ -228,9 +225,5 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 6,
         alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
     },
 })
