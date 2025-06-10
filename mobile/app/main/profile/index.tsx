@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { View, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native'
-import { Text, Chip, Button } from 'react-native-paper'
+import { Text, Chip, Button, useTheme } from 'react-native-paper'
 import { useAuthStore } from '@/lib/store'
 import { SERVER_URL } from '@/lib/constants'
 import { useRouter } from 'expo-router'
-import { useTheme } from 'react-native-paper'
 
 const ProfileView = (profile: {
   display_name: string;
@@ -89,22 +88,22 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     gap: 14,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: '#f9f9f9',
   },
   header: {
     marginBottom: 20,
   },
   label: {
-    fontWeight: "bold",
-    color: "#555",
+    fontWeight: 'bold',
+    color: '#555',
   },
   text: {
     marginBottom: 12,
     fontSize: 16,
   },
   chipContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 6,
     marginBottom: 20,
   },

@@ -20,7 +20,6 @@ type UserDTO struct {
 	Pronouns    string         `json:"pronouns"`
 }
 
-// Updates user's [rofile inforamtion
 func updateUserProfile(c echo.Context, u *auth.User, _ *firebase.App) error {
 	// get info from the request, bind it to a sturct
 	userDTO := new(UserDTO)
