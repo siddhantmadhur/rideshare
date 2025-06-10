@@ -12,8 +12,21 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { TextInput, Button, ProgressBar } from 'react-native-paper'
 import { SERVER_URL } from '@/lib/constants'
 import { useAuthStore } from '@/lib/store'
+import { Image } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import { useTheme } from 'react-native-paper'
 
+
+
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    withRepeat,
+    Easing,
+  } from 'react-native-reanimated'
 const AndroidSignInOptions = () => {
+
     const [alreadyMadeAccount, setAlreadyMadeAccount] = useState(false)
 
     const [email, setEmail] = useState('')
@@ -151,8 +164,13 @@ const AndroidSignInOptions = () => {
     )
 }
 const AppleSignInOptions = () => {
+    const theme = useTheme()
+
     return (
         <Button
+            buttonColor={theme.colors.surface}
+            textColor={theme.colors.primary}
+            style={{ borderRadius: 30 }}
             onPress={async () => {
                 try {
                     const res = await signInWithGoogle()
@@ -168,93 +186,120 @@ const AppleSignInOptions = () => {
     )
 }
 
-export default function Index() {
+
+  
+  export default function Index() {
+    const theme = useTheme()
+    const Logo = require('../assets/images/rideshare-logo.png')
     const user = useAuthStore((state) => state.user)
     const setUser = useAuthStore((state) => state.setUser)
-
-    //const [user, setUser] = useState<null | FirebaseAuthTypes.User>(null)
     const [initializing, setInitializing] = useState(true)
     const router = useRouter()
-
+  
+    const rotation = useSharedValue(0)
     useEffect(() => {
-        GoogleSignin.configure({
-            webClientId:
-                '679084923122-ao9urrt2mjta2rrhfc74i1k8dir628pa.apps.googleusercontent.com',
-        })
-        const subscriber = auth().onAuthStateChanged(async (firebaseUser) => {
-            if (firebaseUser) {
-                if (!user || user.uid !== firebaseUser.uid) {
-                    setUser(firebaseUser)
-                }
-                
-                try {
-                    // Wait for the user to be fully authenticated
-                    if (firebaseUser.emailVerified !== undefined) {
-                        const token = await firebaseUser.getIdToken(false)
-                        
-                        const res = await fetch(`${SERVER_URL}/user/current`, {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        })
-                        
-                        if (res.status === 404) {
-                            router.replace('/main/profile/create')
-                        } else if (res.status === 401) {
-                            auth().signOut()
-                            router.reload()
-                        } else if (res.ok) {
-                            // Profile exists, continue to main app
-                            router.replace('/main/offer')
-                        }
-                    }
-                } catch (error: any) {
-                    console.error('Fetch error:', error)
-                    // If there's an auth error, user might not be fully signed in yet
-                    if (error?.code === 'auth/no-current-user') {
-                        console.log('User not fully authenticated yet, waiting...')
-                        return
-                    }
-                    // For other errors, let them try to continue
-                    router.replace('/main/offer')
-                }
-            }
-            if (initializing) setInitializing(false)
-        })
-        return subscriber
+      rotation.value = withRepeat(
+        withTiming(10, {
+          duration: 4000,
+          easing: Easing.linear,
+        }),
+        -1,
+        true
+      )
     }, [])
-
-    if (initializing) {
-        return null
-    }
-    if (user) {
-        return <Redirect href="/main/offer" /> // which is home tab
-    }
-
+  
+    const logoStyle = useAnimatedStyle(() => ({
+      transform: [{ rotate: `${rotation.value}deg` }],
+    }))
+  
+    useEffect(() => {
+      GoogleSignin.configure({
+        webClientId: '679084923122-ao9urrt2mjta2rrhfc74i1k8dir628pa.apps.googleusercontent.com',
+      })
+  
+      const subscriber = auth().onAuthStateChanged(async (firebaseUser) => {
+        if (firebaseUser) {
+          if (!user || user.uid !== firebaseUser.uid) {
+            setUser(firebaseUser)
+          }
+          try {
+            const token = await firebaseUser.getIdToken(false)
+            const res = await fetch(`${SERVER_URL}/user/current`, {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+            if (res.status === 404) router.replace('/main/profile/create')
+            else if (res.status === 401) {
+              auth().signOut()
+              router.reload()
+            } else if (res.ok) {
+              router.replace('/main/offer')
+            }
+          } catch (error: any) {
+            console.error('Fetch error:', error)
+            router.replace('/main/offer')
+          }
+        }
+        if (initializing) setInitializing(false)
+      })
+  
+      return subscriber
+    }, [])
+  
+    if (initializing) return null
+    if (user) return <Redirect href="/main/offer" />
+  
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 5,
-                alignSelf: 'stretch',
-                paddingBlock: 120,
-            }}
-        >
-            <Text
-                style={{
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                }}
-            >
-                Welcome to RideShare
-            </Text>
-            {Platform.OS === 'ios' ? (
-                <AppleSignInOptions />
-            ) : (
-                <AndroidSignInOptions />
-            )}
+        
+      <LinearGradient
+        colors={['#4A90E2', '#74C0FC']} // smooth blue transition
+        style={styles.container}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Animated.Image
+          source={Logo}
+          style={[styles.logo, logoStyle]}
+          resizeMode="contain"
+        />
+    
+        <Text style={[styles.title, { color: theme.colors.onPrimary }]}>
+            Welcome to RideShare
+        </Text>
+        <Text style={[styles.subtitle, { color: theme.colors.onPrimary }]}>
+            Hop in. Let’s get you moving.
+        </Text>
+
+    
+        <View style={{ width: '80%' }}>
+          <AppleSignInOptions />
         </View>
+      </LinearGradient>
     )
-}
+    
+  }
+  const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 60,
+      },      
+    logo: {
+      width: 160,
+      height: 160,
+      marginBottom: 30,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: '800',
+      color: '#3C3C3C',
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: '#3C3C3C',
+      marginBottom: 40,
+    },
+  })
+    

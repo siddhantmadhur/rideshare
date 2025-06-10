@@ -432,8 +432,8 @@ const DetailedRideInformation = () => {
                 {pickup.title?.split(",")[0]} → {dropoff.title?.split(",")[0]}
               </Text>
               <Text style={styles.rideTime}>
-                Pick Up: {rideInfo.date} at {rideInfo.time}
-              </Text>
+                Pick Up: {rideInfo.date ? new Date(rideInfo.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'N/A'} at {rideInfo.time}
+               </Text>
             </View>
 
             <View style={{marginBottom: 15}}>

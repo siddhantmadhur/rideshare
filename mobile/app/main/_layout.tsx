@@ -25,12 +25,12 @@ const routes = [
     focusedIcon: 'car-back',
     unfocusedIcon: 'car-back',
   },
-  {
-    key: 'search',
-    title: 'Search',
-    focusedIcon: 'magnify',
-    unfocusedIcon: 'magnify',
-  },
+//   {
+//     key: 'search',
+//     title: 'Search',
+//     focusedIcon: 'magnify',
+//     unfocusedIcon: 'magnify',
+//   },
   {
     key: 'profile',
     title: 'Profile',

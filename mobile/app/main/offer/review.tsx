@@ -1,4 +1,3 @@
-// --- app/offer/review.tsx ---
 import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useOffer } from '@/context/OfferContext'
 import { router } from 'expo-router'

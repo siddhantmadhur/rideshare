@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
-import { Text, Chip, Button } from "react-native-paper";
-import { useAuthStore } from "@/lib/store";
-import { SERVER_URL } from "@/lib/constants";
-import { useRouter } from "expo-router";
+import { useEffect, useState } from 'react'
+import { View, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native'
+import { Text, Chip, Button } from 'react-native-paper'
+import { useAuthStore } from '@/lib/store'
+import { SERVER_URL } from '@/lib/constants'
+import { useRouter } from 'expo-router'
+import { useTheme } from 'react-native-paper'
 
-export const ProfileView = (profile: {
+const ProfileView = (profile: {
   display_name: string;
   description: string;
   gender: string;
@@ -19,8 +14,9 @@ export const ProfileView = (profile: {
   interests: string[];
   date_of_birth: string;
 }) => {
-  const dob = new Date(profile.date_of_birth);
-  const formattedDOB = `${dob.getDate()} ${dob.toLocaleString("default", { month: "long" })} ${dob.getFullYear()}`;
+  const theme = useTheme()
+  const dob = new Date(profile.date_of_birth)
+  const formattedDOB = `${dob.getDate()} ${dob.toLocaleString("default", { month: "long" })} ${dob.getFullYear()}`
   return (
     <View>
       <Text style={styles.label}>Name</Text>
@@ -41,60 +37,52 @@ export const ProfileView = (profile: {
       <Text style={styles.label}>Interests</Text>
       <View style={styles.chipContainer}>
         {(profile.interests || []).map((interest: string, i: number) => (
-          <Chip key={i} style={styles.chip}>
+          <Chip
+            key={i}
+            style={[styles.chip, { backgroundColor: theme.colors.primaryContainer }]}
+            textStyle={{ color: theme.colors.onPrimaryContainer }}
+          >
             {interest}
           </Chip>
         ))}
       </View>
     </View>
-  );
-};
+  )
+}
 
 export default function ProfileViewScreen() {
-  // j for viewing profile on profile page
-  const user = useAuthStore((state) => state.user);
-  const [profile, setProfile] = useState<any | null>(null);
-  const router = useRouter();
+  const user = useAuthStore((state) => state.user)
+  const [profile, setProfile] = useState<any | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!user) return;
-      const token = await user.getIdToken();
+      if (!user) return
+      const token = await user.getIdToken()
       const res = await fetch(`${SERVER_URL}/user/current`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
       if (!res.ok) {
-        Alert.alert("Error", "Failed to load profile");
-        return;
+        Alert.alert('Error', 'Failed to load profile')
+        return
       }
-      const data = await res.json();
-      setProfile(data);
-    };
-    fetchProfile();
-  }, [user]);
+      const data = await res.json()
+      setProfile(data)
+    }
+    fetchProfile()
+  }, [user])
 
-  if (!profile) return <ActivityIndicator style={{ marginTop: 40 }} />;
-
+  if (!profile) return <ActivityIndicator style={{ marginTop: 40 }} />
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text variant="headlineMedium" style={styles.header}>
-        My Profile
-      </Text>
-
-      <ProfileView {...profile}  />
-
-      <Button
-        mode="outlined"
-        onPress={() => router.push("/main/profile/edit")}
-        style={styles.button}
-      >
-        {" "}
-        {/* which is home tab */}
+      <Text variant="headlineMedium" style={styles.header}>My Profile</Text>
+      <ProfileView {...profile} />
+      <Button mode="outlined" onPress={() => router.push("/main/profile/edit")} style={styles.button}>
         Edit Profile
       </Button>
     </ScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -127,4 +115,4 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
   },
-});
+})

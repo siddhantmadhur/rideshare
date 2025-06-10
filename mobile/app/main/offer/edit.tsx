@@ -1,4 +1,3 @@
-// EditRide.tsx
 import { useLocalSearchParams, router } from 'expo-router'
 import { useEffect, useState, useRef } from 'react'
 import {
@@ -71,24 +70,59 @@ export default function EditRide() {
     const { isValid, errors: newErrors, message } = validateRideInput({ ...ride })
     setErrors(newErrors)
     if (!isValid) return Alert.alert('Fix Form', message)
-
+  
     try {
       const token = await auth().currentUser?.getIdToken()
+  
+      // Combine date and time to create ISO timestamp
+      const timestamp = new Date(`${ride.date.split('T')[0]}T${convertTo24Hour(ride.time)}:00`).toISOString()
+  
+      const payload = {
+        id: rideId,
+        passengers: String(ride.passengers), // backend expects string
+        pickup: JSON.stringify(ride.pickup),
+        dropoff: JSON.stringify(ride.dropoff),
+        timestamp,
+        notes: ride.notes,
+        has_car: ride.hasCar ?? false,
+        split_gas: ride.splitGas ?? false,
+        split_uber: ride.splitUber ?? false,
+        date: ride.date,
+        time: ride.time,
+        car_model: ride.carModel ?? '',
+        environment: ride.environment ?? '',
+      }
+  
       const res = await fetch(`${SERVER_URL}/rides/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...ride, id: rideId }),
+        body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error()
+  
+      if (!res.ok) {
+        const errorText = await res.text()
+        throw new Error(errorText)
+      }
+  
       Alert.alert('Success', 'Ride updated')
       router.back()
-    } catch {
-      Alert.alert('Error', 'Failed to update ride')
-    }
+    } catch (err) {
+        let message = 'Unknown error'
+        if (err instanceof Error) {
+          message = err.message
+        } else if (typeof err === 'string') {
+          message = err
+        }
+      
+        Alert.alert('Error', `Failed to update ride: ${message}`)
+      }
+      
   }
+  
+  
 
   if (loading) return <ActivityIndicator style={{ marginTop: 50 }} />
 
@@ -115,7 +149,10 @@ export default function EditRide() {
         mode="outlined"
         keyboardType="numeric"
         value={ride.passengers || ''}
-        onChangeText={(text) => setRide({ ...ride, passengers: text })}
+        onChangeText={(text) =>
+            setRide({ ...ride, passengers: Number(text) })
+          }
+          
         style={styles.input}
       />
 

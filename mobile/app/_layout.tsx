@@ -1,19 +1,40 @@
 import { Stack } from 'expo-router'
-import { StatusBar, View } from 'react-native'
-import { PaperProvider, useTheme } from 'react-native-paper'
-import { ThemeProp } from 'react-native-paper/lib/typescript/types'
+import { StatusBar } from 'react-native'
+import {
+  PaperProvider,
+  DefaultTheme,
+  useTheme,
+} from 'react-native-paper'
 
-const theme: ThemeProp = {}
+const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#4A90E2',
+      onPrimary: '#FFFFFF',
+      primaryContainer: '#D8EFFF',        
+      onPrimaryContainer: '#003366',   
+      secondaryContainer: '#D8EFFF', 
+      onSecondaryContainer: '#003366',   
+      background: '#F2F6FC',
+      surface: '#FFFFFF',
+      text: '#1C1C1C',
+      placeholder: '#AAB4BE',
+    },
+  }
+  
+  
 
 export default function RootLayout() {
-    return (
-        <PaperProvider theme={theme}>
-            <StackLayout />
-        </PaperProvider>
-    )
+  return (
+    <PaperProvider theme={theme}>
+      <StackLayout />
+    </PaperProvider>
+  )
 }
 
 function StackLayout() {
+<<<<<<< HEAD
     const currentTheme = useTheme()
     return (
         <>
@@ -36,4 +57,22 @@ function StackLayout() {
             </Stack>
         </>
     )
+=======
+  const currentTheme = useTheme()
+  return (
+    <>
+      <StatusBar
+        backgroundColor={currentTheme.colors.background}
+        hidden={false}
+      />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          navigationBarHidden: false,
+          navigationBarColor: currentTheme.colors.inverseOnSurface,
+        }}
+      />
+    </>
+  )
+>>>>>>> ae1c4a3 (frontend improvements, fix updating form)
 }

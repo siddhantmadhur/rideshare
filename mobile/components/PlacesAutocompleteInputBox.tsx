@@ -5,7 +5,7 @@ import {
   AutocompleteDropdown,
   IAutocompleteDropdownRef,
 } from 'react-native-autocomplete-dropdown'
-import { Text } from 'react-native-paper'
+import { Text, useTheme } from 'react-native-paper'
 
 interface Props {
   placeholder: string
@@ -40,6 +40,7 @@ const PlacesAutocompleteInputBoxBase = (
       setSuggestions([])
     }
   }
+  const theme = useTheme()
 
   return (
     <View style={styles.wrapper}>
@@ -56,7 +57,11 @@ const PlacesAutocompleteInputBoxBase = (
           styles.inputContainer,
           error && { borderColor: 'red', borderWidth: 1 },
         ]}
-        suggestionsListContainerStyle={styles.dropdown}
+        suggestionsListContainerStyle={{
+          backgroundColor: theme.colors.surface,
+          borderRadius: 8,
+          elevation: 3,
+        }}
         onChangeText={handleChange}
         onSelectItem={(item) => {
           if (item?.title && item.id) {
