@@ -32,6 +32,8 @@ import {
   PanGestureHandler,
   State,
 } from "react-native-gesture-handler";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { useAuthStore } from "@/lib/store";
 
 interface RouteCoordinate {
   latitude: number;
@@ -39,7 +41,51 @@ interface RouteCoordinate {
 }
 
 const RequestManagement = (props: { ride_id: number }) => {
+  const user = useAuthStore((state) => state.user);
   const [loading, setLoading] = useState(true);
+
+  const [status, setStatus] = useState(0); // 0-none, 1-pending, 2-accepted, 3-declined
+
+  if (!user) {
+    return <Text>Not logged in</Text>;
+  }
+
+  const requestRide = async () => {
+    setStatus(1)
+    const token = await user.getIdToken()
+    const res = await fetch(`${SERVER_URL}/ride/request/${props.ride_id}/new`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if (res.ok) {
+    fetchRequestStatus()
+    } else {
+      setStatus(0)
+      alert("Error")
+    }
+  }
+  const fetchRequestStatus = async () => {
+    setLoading(true);
+    const res = await fetch(
+      `${SERVER_URL}/ride/request/${props.ride_id}/status`,
+      {
+        headers: {
+          Authorization: `Bearer ${await user.getIdToken()}`,
+        },
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      setStatus(data["status"]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchRequestStatus();
+  }, []);
 
   if (loading) {
     return (
@@ -48,7 +94,20 @@ const RequestManagement = (props: { ride_id: number }) => {
       </View>
     );
   }
-  return <Text>Hi</Text>;
+
+  if (status === 0) {
+    return <Button mode="contained" onPress={()=>{
+        requestRide()
+    }}>Request Ride</Button>;
+  }
+
+  return (
+    <View >
+      <Button disabled mode="contained">
+        {status === 1 ? "Pending..." : status === 2 ? "Accepted" : "Rejected"}
+      </Button>
+    </View>
+  )
 };
 
 const DetailedRideInformation = () => {

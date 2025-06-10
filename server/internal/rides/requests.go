@@ -15,7 +15,35 @@ type RideRequest struct {
 	UserID string `json:"user_id" gorm:"foreignKey"`
 	Ride   RideOffer
 	RideID int `json:"ride_id" gorm:"foreignKey"`
-	Status int `json:"status"` // 0 -> none, -1 -> decline, +1 -> accept
+	Status int `json:"status"` // 0 -> none, 1 -> pending, 2 -> accept, 3 -> decline
+}
+
+// GET /rides/request/:ride_id/status
+func GetRequestCurrentStatus(c echo.Context, u *auth.User, app *firebase.App) error {
+	query := `SELECT status from ride_requests
+		where user_id = ? and ride_id = ?;`
+
+	tx, err := storage.GetConnection()
+	defer storage.CloseConnection(tx)
+	if err != nil {
+		return err
+	}
+
+	rideId, err := strconv.Atoi(c.Param("ride_id"))
+	if err != nil {
+		return err
+	}
+	var requestStatus int
+	res := tx.Raw(query, u.ID, rideId).Scan(&requestStatus)
+	if res.Error != nil {
+		return c.JSON(200, map[string]any{
+			"status": 0,
+		})
+	}
+	return c.JSON(200, map[string]any{
+		"status": requestStatus,
+	})
+
 }
 
 // -> GET /rides/requests/:id/pending
@@ -62,7 +90,7 @@ func CreateRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 		return err
 	}
 	request.UserID = u.ID
-	request.Status = 0
+	request.Status = 1
 	res := tx.Create(&request)
 	if res.Error != nil {
 		return res.Error
@@ -97,7 +125,7 @@ func AcceptRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 			on ride_requests.ride_id = ride_offers.id
 		)
 		update ride_requests
-		set status = 1
+		set status = 2
 		from t
 		where id = ? and offer_id = ? and owner_id = ?;`
 
@@ -133,7 +161,7 @@ func DeclineRideRequest(c echo.Context, u *auth.User, app *firebase.App) error {
 			on ride_requests.ride_id = ride_offers.id
 		)
 		update ride_requests
-		set status = -1
+		set status = 3
 		from t
 		where id = ? and offer_id = ? and owner_id = ?;`
 

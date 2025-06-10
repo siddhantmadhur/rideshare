@@ -30,6 +30,7 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.POST("/ride/request/:ride_id/decline/:request_id", ProtectRouteWithAuth(rides.DeclineRideRequest, app)) // same as above
 	e.POST("/ride/request/:id/delete", ProtectRouteWithAuth(rides.DeleteRideRequest, app))                    // same as above
 	e.GET("/ride/request/:id/pending", ProtectRouteWithAuth(rides.GetAllRideRequest, app))                    // same as above
+	e.GET("/ride/request/:ride_id/status", ProtectRouteWithAuth(rides.GetRequestCurrentStatus, app))          // same as above
 
 	// profile stuff
 	e.POST("/user/create", func(c echo.Context) error {

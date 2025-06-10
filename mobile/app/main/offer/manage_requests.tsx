@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Button, Card, ProgressBar } from "react-native-paper";
 
-interface RideRequest {
+export interface RideRequest {
   display_name: string;
   description: string;
   user_id: string;
@@ -61,10 +61,10 @@ function ManageRequests() {
   return (
     <ScrollView>
       {requests
-        .filter((e) => e.status === 0)
         .map((request) => {
           return (
             <Card
+            mode="contained"
               style={{
                 paddingBlock: 12,
                 paddingInline: 20,
@@ -84,6 +84,9 @@ function ManageRequests() {
                   marginTop: 15,
                 }}
               >
+                {
+                  request.status === 1 ? (
+                    <>
                 <Button
                   onPress={() => {
                     confirmRide(true, request.request_id);
@@ -99,6 +102,14 @@ function ManageRequests() {
                 >
                   Decline
                 </Button>
+                    
+                    </>
+                  ) : (
+                    <Text>
+                      {request.status === 2 ? "Accepted!" : "Rejected!"}
+                    </Text>
+                  )
+                }
               </View>
             </Card>
           );
