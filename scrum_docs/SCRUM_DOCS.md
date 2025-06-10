@@ -54,6 +54,7 @@
 - Use `camelCase` for variables/functions, `PascalCase` for components.
 - One component per file.
 - Handle all errors explicitly and return informative error messages.
+- Use react-native-paper for frontend components
 
 
 ### Go (Backend)
