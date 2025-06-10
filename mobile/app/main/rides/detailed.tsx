@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { useSearchParams } from "expo-router/build/hooks";
+import { useRouter, useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -350,6 +350,7 @@ const DetailedRideInformation = () => {
 
   const pickup = JSON.parse(rideInfo.pickup);
   const dropoff = JSON.parse(rideInfo.dropoff);
+  const router = useRouter()
 
   if (routeCoordinates.length > 0) {
     console.log("Route coordinates sample:", routeCoordinates.slice(0, 5));
@@ -434,6 +435,13 @@ const DetailedRideInformation = () => {
                 Pick Up: {rideInfo.date} at {rideInfo.time}
               </Text>
             </View>
+
+            <View style={{marginBottom: 15}}>
+              <Button mode="contained-tonal" onPress={()=>{
+                router.push(`/user_profile?user_id=${rideInfo.user_id}`)
+              }}>View Profile</Button>
+            </View>
+
 
             <View style={styles.rideDetails}>
               <View style={styles.detailRow}>

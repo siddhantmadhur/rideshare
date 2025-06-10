@@ -77,6 +77,21 @@ func UpdateUserProfile(uid string, updatedProfile *User) (*User, error) {
 	return GetUserProfile(uid)
 }
 
+func GetUserProfileFromIdRoute(c echo.Context) error {
+	userId := c.QueryParam("user_id")
+	if len(userId) == 0 {
+		return c.JSON(400, map[string]string{
+			"message": "Could not find user",
+		})
+	}
+	profile, err := GetUserProfile(userId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, profile)
+}
 func GetUserProfileRoute(c echo.Context, app *firebase.App) error {
 	u, err := GetUserFromContext(c, app)
 	if err != nil {

@@ -40,5 +40,6 @@ func Routes(e *echo.Echo, app *firebase.App) {
 	e.GET("/user/current", func(c echo.Context) error {
 		return auth.GetUserProfileRoute(c, app)
 	})
+	e.GET("/user/information", auth.GetUserProfileFromIdRoute)
 
 }

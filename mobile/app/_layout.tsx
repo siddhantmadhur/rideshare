@@ -28,7 +28,12 @@ function StackLayout() {
                     navigationBarTranslucent: false,
                     navigationBarColor: currentTheme.colors.inverseOnSurface,
                 }}
-            />
+            >
+                <Stack.Screen name='user_profile' options={{
+                    headerShown: true,
+                    headerTitle: 'Profile',
+                }} />
+            </Stack>
         </>
     )
 }
