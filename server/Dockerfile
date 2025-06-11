@@ -1,6 +1,6 @@
-FROM golang:1.24 as build
+FROM golang:latest as build
 
-WORKDIR /app
+WORKDIR /build
 COPY . .
 RUN go get ./...
 RUN go build -o app ./cmd
@@ -8,4 +8,4 @@ RUN go build -o app ./cmd
 FROM alpine:latest as run
 WORKDIR /app
 COPY --from=build /build/app .
-ENTRYPOINT [ "app/main" ]
+ENTRYPOINT [ "app/app" ]
