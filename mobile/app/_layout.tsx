@@ -34,7 +34,6 @@ export default function RootLayout() {
 }
 
 function StackLayout() {
-<<<<<<< HEAD
     const currentTheme = useTheme()
     return (
         <>
@@ -57,22 +56,4 @@ function StackLayout() {
             </Stack>
         </>
     )
-=======
-  const currentTheme = useTheme()
-  return (
-    <>
-      <StatusBar
-        backgroundColor={currentTheme.colors.background}
-        hidden={false}
-      />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          navigationBarHidden: false,
-          navigationBarColor: currentTheme.colors.inverseOnSurface,
-        }}
-      />
-    </>
-  )
->>>>>>> ae1c4a3 (frontend improvements, fix updating form)
 }

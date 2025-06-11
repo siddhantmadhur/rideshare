@@ -5,7 +5,7 @@ import { useAuthStore } from '@/lib/store'
 import { SERVER_URL } from '@/lib/constants'
 import { useRouter } from 'expo-router'
 
-const ProfileView = (profile: {
+export const ProfileView = (profile: {
   display_name: string;
   description: string;
   gender: string;
