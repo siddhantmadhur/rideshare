@@ -2,20 +2,29 @@ package storage
 
 import (
 	"fmt"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+func GetEnvOrDefault(key string, defaultVal string) string {
+	val := os.Getenv(key)
+	if len(val) == 0 {
+		return defaultVal
+	}
+	return val
+}
+
 func GetConnection() (*gorm.DB, error) {
 	url := "postgres://%s:%s@%s:%d/%s"
 
 	var (
-		username string = "postgres"
-		password string = "mysecretpassword"
-		hostname string = "localhost"
+		username string = GetEnvOrDefault("POSTGRES_USERNAME", "postgres")
+		password string = GetEnvOrDefault("POSTGRES_PASSWORD", "mysecretpassword")
+		hostname string = GetEnvOrDefault("POSTGRES_HOSTNAME", "localhost")
 		port     int    = 5432
-		dbname   string = "postgres"
+		dbname   string = GetEnvOrDefault("POSTGRES_DBNAME", "postgres")
 	)
 	dsn := fmt.Sprintf(url, username, password, hostname, port, dbname)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
