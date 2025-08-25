@@ -2,6 +2,13 @@
 
 Welcome to the user guide for our app! Below you'll find a list of key features and how to use them.
 ---
+Here's a video demo:
+
+https://github.com/user-attachments/assets/91a3ff77-538a-4e8f-9da5-35198ae5774d
+
+---
+
+
 
 ## ✨ Feature 1: User Registration
 
